@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <memory>
 #include <tuple>
-#include <chrono>		// ¸“x‚Í1msec’ö“x
+#include <chrono>		// ç²¾åº¦ã¯1msecç¨‹åº¦
 
 #define _dbgSetup(A,B,C)					_DebugDispOut::GetInstance().Setup(A,B,C)
 #define _dbgSetAlpha(A)						_DebugDispOut::GetInstance().SetAlpha(A)

@@ -50,20 +50,20 @@ void _DebugDispOut::WaitMode(void)
 	f1Key_[0] = CheckHitKey(KEY_INPUT_F1);
 	if (f1Key_[0] && !f1Key_[1])
 	{
-		TRACE("ƒfƒoƒbƒO•\¦ON/OFF        FHome\n");
-		TRACE("ƒfƒoƒbƒO•\¦ƒNƒŠƒA[ON/OFFFDelete\n\n");
+		TRACE("ãƒ‡ãƒãƒƒã‚°è¡¨ç¤ºON/OFF        ï¼šHome\n");
+		TRACE("ãƒ‡ãƒãƒƒã‚°è¡¨ç¤ºã‚¯ãƒªã‚¢ãƒ¼ON/OFFï¼šDelete\n\n");
 
-		TRACE("ƒXƒ[‹@”\(‚ä‚Á‚­‚è)FPageDown\n");
-		TRACE("ƒXƒ[‹@”\(‚Í ‚â ‚­)FPageUp\n");
-		TRACE("ˆê’â~/ƒXƒ[Eˆê’â~‰ğœFPause/Break\n\n");
+		TRACE("ã‚¹ãƒ­ãƒ¼æ©Ÿèƒ½(ã‚†ã£ãã‚Š)ï¼šPageDown\n");
+		TRACE("ã‚¹ãƒ­ãƒ¼æ©Ÿèƒ½(ã¯ ã‚„ ã)ï¼šPageUp\n");
+		TRACE("ä¸€æ™‚åœæ­¢/ã‚¹ãƒ­ãƒ¼ãƒ»ä¸€æ™‚åœæ­¢è§£é™¤ï¼šPause/Break\n\n");
 
-		TRACE("ƒoƒbƒNƒOƒ‰ƒEƒ“ƒhˆ——LŒø/–³ŒøFBackSpace\n");
+		TRACE("ãƒãƒƒã‚¯ã‚°ãƒ©ã‚¦ãƒ³ãƒ‰å‡¦ç†æœ‰åŠ¹/ç„¡åŠ¹ï¼šBackSpace\n");
 	}
 
 	if (CheckHitKey(KEY_INPUT_PGDN))
 	{
 		waitTime_+=10.0;
-		TRACE("ƒXƒ[F%f\n", waitTime_);
+		TRACE("ã‚¹ãƒ­ãƒ¼ï¼š%f\n", waitTime_);
 	}
 	if (CheckHitKey(KEY_INPUT_PGUP))
 	{
@@ -72,7 +72,7 @@ void _DebugDispOut::WaitMode(void)
 		{
 			waitTime_ = 0.0;
 		}
-		TRACE("ƒXƒ[F%f\n", waitTime_);
+		TRACE("ã‚¹ãƒ­ãƒ¼ï¼š%f\n", waitTime_);
 	}
 	pouseKey_[1] = pouseKey_[0];
 	pouseKey_[0] = CheckHitKey(KEY_INPUT_PAUSE);
@@ -90,7 +90,7 @@ void _DebugDispOut::WaitMode(void)
 			if (pouseKey_[0] && !pouseKey_[1])
 			{
 				waitTime_ = 0.0;
-				TRACE("ƒXƒ[/ˆê’â~@‰ğœ\n");
+				TRACE("ã‚¹ãƒ­ãƒ¼/ä¸€æ™‚åœæ­¢ã€€è§£é™¤\n");
 				pouseKey_[1] = pouseKey_[0];
 			}
 			endTime_ = std::chrono::system_clock::now();
@@ -98,7 +98,7 @@ void _DebugDispOut::WaitMode(void)
 	}
 	if (pouseKey_[0] && !pouseKey_[1])
 	{
-		TRACE("ˆê’â~\n");
+		TRACE("ä¸€æ™‚åœæ­¢\n");
 		waitTime_ = -1.0;
 		pouseKey_[1] = pouseKey_[0];
 	}
@@ -108,7 +108,7 @@ void _DebugDispOut::WaitMode(void)
 	if (endKey_[0] && !endKey_[1])
 	{
 		clsFlag_ ^= 1;
-		TRACE("ƒfƒoƒbƒO•\¦ƒNƒŠƒA[‹@”\F%d\n",clsFlag_);
+		TRACE("ãƒ‡ãƒãƒƒã‚°è¡¨ç¤ºã‚¯ãƒªã‚¢ãƒ¼æ©Ÿèƒ½ï¼š%d\n",clsFlag_);
 	}
 
 	backSp_[1] = backSp_[0];
@@ -116,7 +116,7 @@ void _DebugDispOut::WaitMode(void)
 	if (backSp_[0] && !backSp_[1])
 	{
 		SetAlwaysRunFlag(GetAlwaysRunFlag() ^ 1);
-		TRACE("ƒoƒbƒNƒOƒ‰ƒEƒ“ƒhˆ—F%d\n", GetAlwaysRunFlag());
+		TRACE("ãƒãƒƒã‚¯ã‚°ãƒ©ã‚¦ãƒ³ãƒ‰å‡¦ç†ï¼š%d\n", GetAlwaysRunFlag());
 	}
 
 }
@@ -216,7 +216,7 @@ bool _DebugDispOut::DrawDebug(void)
 	homeKey_[0] = CheckHitKey(KEY_INPUT_HOME);
 	if (homeKey_[0] && !homeKey_[1])
 	{
-		TRACE("ƒfƒoƒbƒO•\¦F%d\n", dispFlag_);
+		TRACE("ãƒ‡ãƒãƒƒã‚°è¡¨ç¤ºï¼š%d\n", dispFlag_);
 		dispFlag_ ^= 1;
 	}
 	if (dispFlag_)
