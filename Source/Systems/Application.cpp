@@ -19,6 +19,7 @@ namespace
 {
     constexpr int kScreenWidth = 1024;
     constexpr int kScreenHeight = 768;
+    
     Application* AppInstance = nullptr;
 }
 
@@ -52,7 +53,7 @@ void Application::Impl::Update()
     //
 
     // Change/Move scene
-    if (scene->EnableChangeScene)
+    if (scene->IsChangeSceneRequested)
         scene = std::move(scene->ChangeScene(std::move(scene)));
     //
 }
@@ -158,5 +159,4 @@ void Application::operator=(const Application&)
 void Application::operator=(Application&&) noexcept
 {
 }
-
 //

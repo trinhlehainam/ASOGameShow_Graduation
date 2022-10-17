@@ -4,10 +4,10 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	auto& sceneMng = Application::Instance();
-	sceneMng.Init();
-	sceneMng.Run();
-	sceneMng.Exit();
+	auto& app = Application::Instance();
+	app.Init();
+	app.Run();
+	app.Exit();
 
 	return 0;
 }

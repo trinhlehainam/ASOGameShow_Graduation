@@ -28,7 +28,7 @@ public:
 	virtual std::unique_ptr<IScene> ChangeScene(std::unique_ptr<IScene>) = 0;
 	virtual SCENE_ID GetSceneID() = 0;
 
-	bool EnableChangeScene;
+	bool IsChangeSceneRequested;
 
 protected:
 	float m_screenOffsetX, m_screenOffsetY;

@@ -7,7 +7,7 @@
 #include "../Systems/EntityMng.h"
 
 IScene::IScene() :
-	EnableChangeScene(false),
+	IsChangeSceneRequested(false),
 	m_screenOffsetX(0.0f), m_screenOffsetY(0.0f), m_entityMng(std::make_shared<EntityMng>())
 {
 	m_entityMng->m_self = m_entityMng;

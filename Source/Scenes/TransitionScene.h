@@ -5,6 +5,17 @@ class TransitionScene :
     public IScene
 {
 public:
+    enum class TRANSITION
+    {
+        FADE_OUT_FADE_IN,
+        CROSS_OVER,
+        NONE
+    };
+
+public:
+    explicit TransitionScene(std::unique_ptr<IScene> before, std::unique_ptr<IScene> after, TRANSITION transition, float transitionTime_s);
+    ~TransitionScene();
+private:
     enum class STAGE
     {
         FADE_IN,
@@ -12,38 +23,34 @@ public:
         CROSS_OVER,
         DONE
     };
-public:
-    explicit TransitionScene(std::unique_ptr<IScene> before, std::unique_ptr<IScene> after);
-    explicit TransitionScene(std::unique_ptr<IScene> before, std::unique_ptr<IScene> after, STAGE stage);
-    explicit TransitionScene(std::unique_ptr<IScene> before, std::unique_ptr<IScene> after, STAGE stageBefore, STAGE stageAfter );
-    ~TransitionScene();
-private:
-   bool Init() override;
-   void Update(float deltaTime_s) override;
-   void RenderToOwnScreen() override;
-   std::unique_ptr<IScene> ChangeScene(std::unique_ptr<IScene> scene) override;
-   SCENE_ID GetSceneID() override;
+    
+    bool Init() override;
+    void Update(float deltaTime_s) override;
+    void RenderToOwnScreen() override;
+    std::unique_ptr<IScene> ChangeScene(std::unique_ptr<IScene> scene) override;
+    SCENE_ID GetSceneID() override;
 
 private:
-   using RenderFunc_t = void (TransitionScene::*)(const std::unique_ptr<IScene>&);
-   
-   void SetUpStageBefore();
-   void SetUpStageAfter();
-   void ChangeStage();
+    using RenderFunc_t = void (TransitionScene::*)(const std::unique_ptr<IScene>&);
 
-   void RenderSleep(const std::unique_ptr<IScene>& pScene);
-   void RenderFadeOut(const std::unique_ptr<IScene>& pScene);
-   void RenderFadeIn(const std::unique_ptr<IScene>& pScene);
-   void RenderCrossOver(const std::unique_ptr<IScene>& pScene);
+    void SetUpStageBefore();
+    void SetUpStageAfter();
+    void ChangeStage();
+
+    void RenderSleep(const std::unique_ptr<IScene>& pScene);
+    void RenderFadeOut(const std::unique_ptr<IScene>& pScene);
+    void RenderFadeIn(const std::unique_ptr<IScene>& pScene);
+
+    void RenderEnd();
 private:
-    std::unique_ptr<IScene> m_before;
-    std::unique_ptr<IScene> m_after;
+    std::unique_ptr<IScene> m_sceneBefore;
+    std::unique_ptr<IScene> m_sceneAfter;
     STAGE m_stageBefore;
     STAGE m_stageAfter;
 
     RenderFunc_t m_renderBefore;
     RenderFunc_t m_renderAfter;
 
+    const float m_transiftionTime_s;
     float m_timer_s;
 };
-
