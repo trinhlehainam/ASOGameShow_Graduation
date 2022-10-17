@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animatorController name ="playerAnimator" entryState="idle">
+	<parameter name="isAttack" type="1" value="0.0"/>
+	<parameter name="isImpact" type="1" value="0.0"/>
+	<parameter name="speed" type="0" value="0.0"/>
+  
+	<animatorState name ="attack" animationList="knight" animationState="Attack">
+		<transition name ="" currentState="attack" destinationState="idle">
+			<condition mode ="1" paraName ="isAttack" threshold="0"/>
+		</transition>
+	</animatorState>
+  
+	<animatorState name ="idle" animationList="knight" animationState="Idle">
+		<transition name ="" currentState="idle" destinationState="run">
+			<condition mode ="5" paraName ="speed" threshold="0"/>
+		</transition>
+		<transition name ="" currentState="idle" destinationState="attack">
+			<condition mode ="0" paraName ="isAttack" threshold="1"/>
+		</transition>
+		<transition name ="" currentState="idle" destinationState="impact">
+			<condition mode ="0" paraName ="isImpact" threshold="1"/>
+		</transition>
+	</animatorState>
+  
+	<animatorState name ="run" animationList="knight" animationState="Run">
+		<transition name ="" currentState="run" destinationState="idle">
+			<condition mode ="4" paraName ="speed" threshold="0"/>
+		</transition>
+		<transition name ="" currentState="run" destinationState="impact">
+			<condition mode ="0" paraName ="isImpact" threshold="1"/>
+		</transition>
+	</animatorState>
+  
+	<animatorState name ="impact" animationList="knight" animationState="Dead">
+ 		<transition name ="" currentState="impact" destinationState="idle">
+ 			<condition mode ="1" paraName ="isImpact" threshold="0"/>
+ 		</transition>
+	</animatorState>
+</animatorController>

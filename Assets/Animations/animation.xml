@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animationGroup name="knight" celwidth="64" celheight="64" celcount="28" columns="7">
+ <image source="Assets/Textures/knight 1 axe.png" width="448" height="256"/>
+	<animation name="Idle" id="0" count="5" loop="-1">
+		<duration encoding="csv">
+			100,100,100,100,100
+		</duration>
+	</animation>
+	<animation name="Run" id="5" count="8" loop="-1">
+		<duration encoding="csv">
+			100,100,100,100,100,100,100,100
+		</duration>
+	</animation>
+	<animation name="Jump" id="13" count="3" loop="-1">
+		<duration encoding="csv">
+			100,100,100
+		</duration>
+	</animation>
+	<animation name="Fall" id="16" count="2" loop="-1">
+		<duration encoding="csv">
+			100,100
+		</duration>
+	</animation>
+	<animation name="Ground Impact" id="18" count="1" loop="-1">
+		<duration encoding="csv">
+			100
+		</duration>
+	</animation>
+	<animation name="Attack" id="19" count="3" loop="-1">
+		<duration encoding="csv">
+			100,100,100
+		</duration>
+	</animation>
+	<animation name="Taking Damage" id="22" count="1" loop="-1">
+		<duration encoding="csv">
+			100
+		</duration>
+	</animation>
+	<animation name="Dead" id="23" count="3" loop="-1">
+		<duration encoding="csv">
+			100,100,100
+		</duration>
+	</animation>
+	<animation name="Shield Blocking" id="26" count="2" loop="-1">
+		<duration encoding="csv">
+			100,100
+		</duration>
+	</animation>
+</animationGroup>

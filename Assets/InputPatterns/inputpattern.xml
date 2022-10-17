@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<group>
+	<pattern name="combo-1">
+		<key encoding="csv">
+			left right btn1 btn2 btn2 btn3
+		</key>
+	</pattern>
+	<pattern name="combo-2">
+		<key encoding="csv">
+			left down right
+		</key>
+	</pattern>
+</group>
