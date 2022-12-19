@@ -156,6 +156,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Component\Animation\AnimatorController.cpp" />
+    <ClCompile Include="Source\Math\rect.cpp" />
+    <ClCompile Include="Source\Scenes\MenuScene.cpp" />
     <ClCompile Include="Source\Systems\AnimatorControllerMng.cpp" />
     <ClCompile Include="Source\Component\Animation\AnimationTransition.cpp" />
     <ClCompile Include="Source\Input\InputCommand.cpp" />
@@ -197,8 +199,11 @@
     <ClCompile Include="Source\Component\Collider\TriangleCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common.h" />
     <ClInclude Include="Source\Component\Animation\AnimatorController.h" />
     <ClInclude Include="Source\Component\Animation\AnimatorParameter.h" />
+    <ClInclude Include="Source\Math\rect.h" />
+    <ClInclude Include="Source\Scenes\MenuScene.h" />
     <ClInclude Include="Source\Systems\AnimatorControllerMng.h" />
     <ClInclude Include="Source\Component\Animation\AnimationTransition.h" />
     <ClInclude Include="Source\Component\Animation\ConditionMode.h" />

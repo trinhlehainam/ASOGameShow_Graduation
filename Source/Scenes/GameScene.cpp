@@ -3,6 +3,7 @@
 #include <DxLib.h>
 #include <rapidxml.hpp>
 
+#include "MenuScene.h"
 #include "../Systems/Renderer.h"
 #include "../Systems/Physics.h"
 #include "../Systems/AnimationMng.h"
@@ -12,6 +13,7 @@
 #include "../Input/IInput.h"
 #include "../GameObject/Player.h"
 #include "../GameObject/Entity.h"
+#include "../Systems/Application.h"
 
 namespace
 {
@@ -58,6 +60,11 @@ bool GameScene::Init()
 
 void GameScene::Update(float deltaTime_s)
 {
+	if(DxLib::CheckHitKey(KEY_INPUT_P))
+	{
+		Application::PushScene(std::make_unique<MenuScene>());
+	}	
+	
 	m_player->Update(deltaTime_s);
 	m_entityMng->Update(deltaTime_s);
 }

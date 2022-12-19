@@ -1,25 +1,24 @@
 #include "Application.h"
 
 #include <chrono>
+#include <deque>
 
 #include <DxLib.h>
 
 #include "../_debug/_DebugDispOut.h"
-#include "../Math/MathHelper.h"
 #include "../Systems/TextureMng.h"
 #include "../Systems/AnimationMng.h"
 #include "../Systems/AnimatorControllerMng.h"
 #include "../Systems/Physics.h"
 #include "../Systems/Renderer.h"
+#include "../Math/MathHelper.h"
 
+#include "../Common.h"
 #include "../Scenes/TitleScene.h"
 #include "../Scenes/GameScene.h"
 
 namespace
 {
-    constexpr int kScreenWidth = 1024;
-    constexpr int kScreenHeight = 768;
-
     Application* AppInstance = nullptr;
 }
 
@@ -35,7 +34,7 @@ public:
 
     float GetDeltaTime_s();
 
-    std::unique_ptr<IScene> scene;
+    std::deque<std::unique_ptr<IScene>> scenes;
     std::chrono::steady_clock::time_point lastTime;
     float m_deltaTime_s;
 };
@@ -49,12 +48,12 @@ void Application::Impl::Update()
     // Update
     m_deltaTime_s = GetDeltaTime_s();
     lastTime = std::chrono::high_resolution_clock::now();
-    scene->Update(m_deltaTime_s);
+    scenes.back()->Update(m_deltaTime_s);
     //
 
     // Change/Move scene
-    if (scene->IsChangeSceneRequested)
-        scene = scene->ChangeScene(std::move(scene));
+    if (scenes.back()->IsChangeSceneRequested)
+        scenes.back() = scenes.back()->ChangeScene(std::move(scenes.back()));
     //
 }
 
@@ -63,12 +62,12 @@ void Application::Impl::Render()
 #ifdef _DEBUG
     _dbgStartDraw();
 #endif
-    scene->RenderToOwnScreen();
+    scenes.back()->RenderToOwnScreen();
 
     // Render to screen back
     SetDrawScreen(DX_SCREEN_BACK);
     ClearDrawScreen();
-    scene->Render();
+    scenes.back()->Render();
     // Show FPS
 #ifdef _DEBUG
     DrawFormatString(20, 10, GetColor(255, 255, 255), "FPS : %.f", 1.0f / m_deltaTime_s);
@@ -91,6 +90,68 @@ Application& Application::Instance()
     if (!AppInstance)
         AppInstance = new Application();
     return *AppInstance;
+}
+
+bool Application::Initialize()
+{
+    if (!AppInstance)
+        AppInstance = new Application();
+
+    return AppInstance->Init();
+}
+
+void Application::Execute()
+{
+    if (!AppInstance)
+    {
+        AppInstance = new Application();
+        AppInstance->Init();
+    }
+
+    AppInstance->Run();
+}
+
+void Application::Terminate()
+{
+    if (!AppInstance) return;
+
+    AppInstance->Exit();
+    
+    delete AppInstance;
+    AppInstance = nullptr;
+}
+
+void Application::ChangeScene(std::unique_ptr<IScene> scene)
+{
+    if (!AppInstance) return;
+    AppInstance->m_impl->scenes.back() = std::move(scene);
+}
+
+void Application::ClearScene()
+{
+    if (!AppInstance) return;
+    
+    AppInstance->m_impl->scenes.clear();
+}
+
+void Application::ResetScene(std::unique_ptr<IScene> scene)
+{
+    if (!AppInstance) return;
+    
+    AppInstance->m_impl->scenes.clear();
+    AppInstance->m_impl->scenes.emplace_back(std::move(scene));
+}
+
+void Application::PushScene(std::unique_ptr<IScene> scene)
+{
+    if (!AppInstance) return;
+    AppInstance->m_impl->scenes.emplace_back(std::move(scene));
+}
+
+void Application::PopScene()
+{
+    if (!AppInstance) return;
+    AppInstance->m_impl->scenes.pop_back();
 }
 
 Application::Application(): m_impl(std::make_unique<Impl>())
@@ -119,8 +180,8 @@ bool Application::Init()
     AnimationMng::Create();
     AnimatorControllerMng::Create();
 
-    m_impl->scene = std::make_unique<TitleScene>();
-    m_impl->scene->Init();
+    m_impl->scenes.emplace_back(std::make_unique<TitleScene>());
+    m_impl->scenes.back()->Init();
 
     return true;
 }

@@ -4,8 +4,10 @@
 
 #include "../Systems/TextureMng.h"
 
+#include "../Common.h"
 #include "TransitionScene.h"
 #include "GameScene.h"
+
 
 TitleScene::TitleScene()
 {
@@ -18,7 +20,7 @@ TitleScene::~TitleScene()
 
 bool TitleScene::Init()
 {
-    TextureMng::AddImage("Assets/Textures/statue.jpg", "title");
+    TextureMng::AddImage("Assets/Textures/PRESS ENTER KEY.png", "Press enter");
 
     return true;
 }
@@ -34,10 +36,12 @@ void TitleScene::RenderToOwnScreen()
     DxLib::SetDrawScreen(m_screenID);
     DxLib::ClearDrawScreen();
 
-    auto imageId = TextureMng::GetID("title");
-    int x, y;
-    DxLib::GetGraphSize(imageId, &x, &y);
-    DxLib::DrawGraph(0, 0, imageId, 0);
+    auto imageId = TextureMng::GetID("Press enter");
+    float x, y;
+    DxLib::GetGraphSizeF(imageId, &x, &y);
+    float posX = (kScreenWidth - x) / 2.f;
+    float posY = (kScreenHeight - y) / 2.f;
+    DxLib::DrawGraphF(posX, posY, imageId, 0);
 }
 
 std::unique_ptr<IScene> TitleScene::ChangeScene(std::unique_ptr<IScene> scene)

@@ -4,10 +4,9 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	auto& app = Application::Instance();
-	app.Init();
-	app.Run();
-	app.Exit();
+	Application::Initialize();
+	Application::Execute();
+	Application::Terminate();
 
 	return 0;
 }
