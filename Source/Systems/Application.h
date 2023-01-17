@@ -2,6 +2,7 @@
 #include <memory>
 
 class IScene;
+class Controller;
 
 // Singleton
 class Application
@@ -18,7 +19,9 @@ public:
 	static void ResetScene(std::unique_ptr<IScene> scene);
 	static void PushScene(std::unique_ptr<IScene> scene);
 	static void PopScene();
-	
+
+	static Controller* GetController();
+
 private:
 	Application();
 	~Application();

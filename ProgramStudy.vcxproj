@@ -163,6 +163,7 @@
     <ClCompile Include="Source\Input\InputCommand.cpp" />
     <ClCompile Include="Source\Component\Animation\Animator.cpp" />
     <ClCompile Include="Source\Systems\Application.cpp" />
+    <ClCompile Include="Source\Systems\Controller.cpp" />
     <ClCompile Include="Source\Systems\Renderer.cpp" />
     <ClCompile Include="Source\Systems\Physics.cpp" />
     <ClCompile Include="Source\Systems\EntityMng.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Source\Component\Animation\AnimatorState.h" />
     <ClInclude Include="Source\Input\InputCommand.h" />
     <ClInclude Include="Source\Component\Animation\Animator.h" />
+    <ClInclude Include="Source\Systems\Controller.h" />
     <ClInclude Include="Source\Systems\Renderer.h" />
     <ClInclude Include="Source\Systems\Physics.h" />
     <ClInclude Include="Source\Systems\EntityMng.h" />

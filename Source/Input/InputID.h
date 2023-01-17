@@ -10,6 +10,8 @@ enum class INPUT_ID
 	BTN2,
 	BTN3,
 	BTN4,
+	PAUSE,
+	SELECT,
 	MAX
 };
 

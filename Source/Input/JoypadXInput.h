@@ -10,7 +10,7 @@ public:
 	~JoypadXInput();
 public:
 	void Update() override;
-	INPUT_DEVICE_ID GetDeviceID() override;
+	INPUT_DEVICE GetDeviceID() override;
 private:
 	XINPUT_STATE m_joypadInputs;
 };

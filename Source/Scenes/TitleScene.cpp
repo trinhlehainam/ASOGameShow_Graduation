@@ -1,8 +1,12 @@
 #include "TitleScene.h"
 
+#include <cassert>
 #include <DxLib.h>
 
 #include "../Systems/TextureMng.h"
+#include "../Systems/Application.h"
+#include "../Input/InputID.h"
+#include "../Systems/Controller.h"
 
 #include "../Common.h"
 #include "TransitionScene.h"
@@ -27,7 +31,11 @@ bool TitleScene::Init()
 
 void TitleScene::Update(float deltaTime_s)
 {
-    if (DxLib::CheckHitKey(KEY_INPUT_SPACE))
+    const auto Controller = Application::GetController();
+	assert(Controller);
+	
+	// Return to previous scene
+	if (Controller->IsJustPressed(INPUT_ID::SELECT))
         IsChangeSceneRequested = true;
 }
 

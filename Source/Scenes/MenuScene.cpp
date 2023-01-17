@@ -1,5 +1,6 @@
 ﻿#include "MenuScene.h"
 
+#include <assert.h>
 #include <DxLib.h>
 
 #include "../Common.h"
@@ -7,6 +8,7 @@
 #include "TitleScene.h"
 #include "../Math/rect.h"
 #include "../Systems/Application.h"
+#include "../Systems/Controller.h"
 // #include "../Scene/KeyConfigScene.h"
 
 namespace
@@ -185,22 +187,22 @@ void MenuScene::DisappearDraw()
 
 void MenuScene::NormalUpdate(const float& deltaTime)
 {
+	const auto Controller = Application::GetController();
+	assert(Controller);
+	
 	// Return to previous scene
-	// if (sceneInput_.IsTriggered(L"pause"))
-	if (DxLib::CheckHitKey(KEY_INPUT_P))
+	if (Controller->IsJustPressed(INPUT_ID::BTN4))
 	{
 		CloseScene();
 	}
 
 	// Move between items
-	// if (sceneInput_.IsTriggered(L"up"))
-	if (DxLib::CheckHitKey(KEY_INPUT_UP))
+	if (Controller->IsJustPressed(INPUT_ID::UP))
 	{
 		currentItemNo_ = (currentItemNo_ - 1 + itemSize) % itemSize;
 	}
 	
-	// if (sceneInput_.IsTriggered(L"down"))
-	if (DxLib::CheckHitKey(KEY_INPUT_DOWN))
+	if (Controller->IsJustPressed(INPUT_ID::DOWN))
 	{
 		currentItemNo_ = (currentItemNo_ + 1) % itemSize;
 	}
@@ -208,8 +210,7 @@ void MenuScene::NormalUpdate(const float& deltaTime)
 	SetCurrentItem();
 
 	// Select Menu Item
-	// if (sceneInput_.IsTriggered(L"enter"))
-	if (DxLib::CheckHitKey(KEY_INPUT_END))
+	if (Controller->IsJustPressed(INPUT_ID::SELECT))
 	{
 		menuItems_[currentItemNo_].func();
 	}

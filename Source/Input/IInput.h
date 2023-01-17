@@ -10,7 +10,7 @@ namespace
 	constexpr int kMaxInputStates = 2;
 }
 
-enum class INPUT_DEVICE_ID
+enum class INPUT_DEVICE
 {
 	KEYBOARD,
 	JOYPAD
@@ -28,7 +28,7 @@ public:
 	virtual ~IInput();
 public:
 	virtual void Update() = 0;
-	virtual INPUT_DEVICE_ID GetDeviceID() = 0;
+	virtual INPUT_DEVICE GetDeviceID() = 0;
 public:
 	void SetInput(INPUT_ID id, int DX_KEY_INPUT);
 

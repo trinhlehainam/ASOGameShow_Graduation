@@ -14,6 +14,7 @@
 #include "../GameObject/Player.h"
 #include "../GameObject/Entity.h"
 #include "../Systems/Application.h"
+#include "../Systems/Controller.h"
 
 namespace
 {
@@ -37,7 +38,7 @@ bool GameScene::Init()
 	m_map = std::make_shared<TileMap>(m_entityMng, "Assets/Map/map.xml", "map");
 	m_player = std::make_shared<Player>(m_entityMng);
 
-	m_player->Init(INPUT_DEVICE_ID::KEYBOARD);
+	m_player->Init(INPUT_DEVICE::KEYBOARD);
 
 	for (const auto& entity : m_entityMng->GetAllEntities())
 	{
@@ -60,7 +61,9 @@ bool GameScene::Init()
 
 void GameScene::Update(float deltaTime_s)
 {
-	if(DxLib::CheckHitKey(KEY_INPUT_P))
+	const auto Controller = Application::GetController();
+
+	if(Controller && Controller->IsJustPressed(INPUT_ID::BTN4))
 	{
 		Application::PushScene(std::make_unique<MenuScene>());
 	}	

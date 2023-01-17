@@ -31,16 +31,16 @@ Player::~Player()
 {
 }
 
-void Player::Init(INPUT_DEVICE_ID deviceId)
+void Player::Init(INPUT_DEVICE deviceId)
 {
 	TextureMng::AddImage("knight", "Assets/Textures/knight 1 axe.png");
 
 	switch (deviceId)
 	{
-	case INPUT_DEVICE_ID::KEYBOARD:
+	case INPUT_DEVICE::KEYBOARD:
 		m_input = std::make_shared<KeyboardInput>();
 		break;
-	case INPUT_DEVICE_ID::JOYPAD:
+	case INPUT_DEVICE::JOYPAD:
 		m_input = std::make_shared<JoypadXInput>();
 		break;
 	}

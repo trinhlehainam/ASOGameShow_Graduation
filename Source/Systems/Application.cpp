@@ -5,6 +5,7 @@
 
 #include <DxLib.h>
 
+#include "Controller.h"
 #include "../_debug/_DebugDispOut.h"
 #include "../Systems/TextureMng.h"
 #include "../Systems/AnimationMng.h"
@@ -34,26 +35,32 @@ public:
 
     float GetDeltaTime_s();
 
-    std::deque<std::unique_ptr<IScene>> scenes;
-    std::chrono::steady_clock::time_point lastTime;
+    std::unique_ptr<Controller> m_controller;
+    std::deque<std::unique_ptr<IScene>> m_scenes;
+    std::chrono::steady_clock::time_point m_lastTime;
     float m_deltaTime_s;
 };
 
-Application::Impl::Impl() : lastTime(std::chrono::high_resolution_clock::now()), m_deltaTime_s(0.0f)
+Application::Impl::Impl() :
+    m_controller(std::make_unique<Controller>()),
+    m_lastTime(std::chrono::high_resolution_clock::now()),
+    m_deltaTime_s(0.0f)
 {
 }
 
 void Application::Impl::Update()
 {
     // Update
+    m_controller->Update();
+    
     m_deltaTime_s = GetDeltaTime_s();
-    lastTime = std::chrono::high_resolution_clock::now();
-    scenes.back()->Update(m_deltaTime_s);
+    m_lastTime = std::chrono::high_resolution_clock::now();
+    m_scenes.back()->Update(m_deltaTime_s);
     //
 
     // Change/Move scene
-    if (scenes.back()->IsChangeSceneRequested)
-        scenes.back() = scenes.back()->ChangeScene(std::move(scenes.back()));
+    if (m_scenes.back()->IsChangeSceneRequested)
+        m_scenes.back() = m_scenes.back()->ChangeScene(std::move(m_scenes.back()));
     //
 }
 
@@ -62,12 +69,12 @@ void Application::Impl::Render()
 #ifdef _DEBUG
     _dbgStartDraw();
 #endif
-    scenes.back()->RenderToOwnScreen();
+    m_scenes.back()->RenderToOwnScreen();
 
     // Render to screen back
     SetDrawScreen(DX_SCREEN_BACK);
     ClearDrawScreen();
-    scenes.back()->Render();
+    m_scenes.back()->Render();
     // Show FPS
 #ifdef _DEBUG
     DrawFormatString(20, 10, GetColor(255, 255, 255), "FPS : %.f", 1.0f / m_deltaTime_s);
@@ -81,7 +88,7 @@ void Application::Impl::Render()
 float Application::Impl::GetDeltaTime_s()
 {
     return std::chrono::duration<float, std::chrono::seconds::period>(
-        std::chrono::high_resolution_clock::now() - lastTime).count();
+        std::chrono::high_resolution_clock::now() - m_lastTime).count();
 }
 #pragma endregion
 
@@ -124,34 +131,39 @@ void Application::Terminate()
 void Application::ChangeScene(std::unique_ptr<IScene> scene)
 {
     if (!AppInstance) return;
-    AppInstance->m_impl->scenes.back() = std::move(scene);
+    AppInstance->m_impl->m_scenes.back() = std::move(scene);
 }
 
 void Application::ClearScene()
 {
     if (!AppInstance) return;
     
-    AppInstance->m_impl->scenes.clear();
+    AppInstance->m_impl->m_scenes.clear();
 }
 
 void Application::ResetScene(std::unique_ptr<IScene> scene)
 {
     if (!AppInstance) return;
     
-    AppInstance->m_impl->scenes.clear();
-    AppInstance->m_impl->scenes.emplace_back(std::move(scene));
+    AppInstance->m_impl->m_scenes.clear();
+    AppInstance->m_impl->m_scenes.emplace_back(std::move(scene));
 }
 
 void Application::PushScene(std::unique_ptr<IScene> scene)
 {
     if (!AppInstance) return;
-    AppInstance->m_impl->scenes.emplace_back(std::move(scene));
+    AppInstance->m_impl->m_scenes.emplace_back(std::move(scene));
 }
 
 void Application::PopScene()
 {
     if (!AppInstance) return;
-    AppInstance->m_impl->scenes.pop_back();
+    AppInstance->m_impl->m_scenes.pop_back();
+}
+
+Controller* Application::GetController()
+{
+    return AppInstance->m_impl->m_controller.get();
 }
 
 Application::Application(): m_impl(std::make_unique<Impl>())
@@ -180,8 +192,8 @@ bool Application::Init()
     AnimationMng::Create();
     AnimatorControllerMng::Create();
 
-    m_impl->scenes.emplace_back(std::make_unique<TitleScene>());
-    m_impl->scenes.back()->Init();
+    m_impl->m_scenes.emplace_back(std::make_unique<TitleScene>());
+    m_impl->m_scenes.back()->Init();
 
     return true;
 }

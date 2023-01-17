@@ -9,7 +9,9 @@ JoypadXInput::JoypadXInput():
 	XINPUT_BUTTON_A,
 	XINPUT_BUTTON_B,
 	XINPUT_BUTTON_X,
-	XINPUT_BUTTON_Y
+	XINPUT_BUTTON_Y,
+	XINPUT_BUTTON_START,
+	XINPUT_BUTTON_A
 		})
 {
 	DxLib::GetJoypadXInputState(DX_INPUT_PAD1, &m_joypadInputs);
@@ -29,7 +31,7 @@ void JoypadXInput::Update()
 		SetInputState(id, m_joypadInputs.Buttons[m_inputs[static_cast<size_t>(id)]]);
 }
 
-INPUT_DEVICE_ID JoypadXInput::GetDeviceID()
+INPUT_DEVICE JoypadXInput::GetDeviceID()
 {
-	return INPUT_DEVICE_ID::JOYPAD;
+	return INPUT_DEVICE::JOYPAD;
 }
