@@ -4,9 +4,9 @@
 #include <algorithm>
 #include <array>
 
+#include "rect.h"
 #include "../Math/line2.h"
 #include "../Math/segment2.h"
-#include "Geometry/AABB.h"
 #include "Geometry/Circle.h"
 #include "Geometry/Triangle.h"
 
@@ -115,12 +115,12 @@ namespace MathHelper
 		return dot(distanceVec, distanceVec) <= c.Radius * c.Radius;
 	}
 
-	bool isOverlap(const position2f& p, const AABBf& r)
+	bool isOverlap(const position2f& p, const rectf& r)
 	{
-		float left = r.Origin.x;
-		float right = r.Origin.x + r.Size.x;
-		float top = r.Origin.y;
-		float bottom = r.Origin.y + r.Size.y;
+		float left = r.pos.x;
+		float right = r.pos.x + r.w;
+		float top = r.pos.y;
+		float bottom = r.pos.y + r.h;
 
 		return left <= p.x && p.x <= right &&
 			   top <= p.y && p.y <= bottom;
@@ -138,29 +138,29 @@ namespace MathHelper
 		return d * d <= r * r;
 	}
 
-	bool isOverlap(const Circle& c, const AABBf& r)
+	bool isOverlap(const Circle& c, const rectf& r)
 	{
-		auto closet_point = clampVec(c.Center, r.Origin, r.Origin + r.Size);
+		auto closet_point = clampVec(c.Center, r.pos, r.pos + vec2f(r.w, r.h));
 		auto d = closet_point - c.Center;
 		return d * d <= c.Radius * c.Radius;
 	}
 
-	bool isOverlap(const AABBf& r, const Circle& c)
+	bool isOverlap(const rectf& r, const Circle& c)
 	{
 		return isOverlap(c, r);
 	}
 
-	bool isOverlap(const AABBf& a, const AABBf& b)
+	bool isOverlap(const rectf& a, const rectf& b)
 	{
-		auto aLeft = a.Origin.x;
-		auto aRight = a.Origin.x + a.Size.x;
-		auto aTop = a.Origin.y;
-		auto aBottom = a.Origin.y + a.Size.y;
+		auto aLeft = a.pos.x;
+		auto aRight = a.pos.x + a.w;
+		auto aTop = a.pos.y;
+		auto aBottom = a.pos.y + a.h;
 
-		auto bLeft = b.Origin.x;
-		auto bRight = b.Origin.x + b.Size.x;
-		auto bTop = b.Origin.y;
-		auto bBottom = b.Origin.y + b.Size.y;
+		auto bLeft = b.pos.x;
+		auto bRight = b.pos.x + b.w;
+		auto bTop = b.pos.y;
+		auto bBottom = b.pos.y + b.h;
 
 		return isOverlap(aLeft, aRight, bLeft, bRight) && isOverlap(aTop, aBottom, bTop, bBottom);
 	}
@@ -209,14 +209,14 @@ namespace MathHelper
 		return isOverlap(nearest, cir);
 	}
 
-	bool isOverlap(const line2& l, const AABBf& r)
+	bool isOverlap(const line2& l, const rectf& r)
 	{
 		vec2f n = orthogonalVec(l.dir);
 
-		vec2f l1 = r.Origin - l.base;
-		vec2f l2 = vec2f{ r.Origin.x + r.Size.x, r.Origin.y } - l.base ;
-		vec2f l3 = (r.Origin + r.Size) - l.base ;
-		vec2f l4 = vec2f{ r.Origin.x, r.Origin.y + r.Size.y } - l.base ;
+		vec2f l1 = r.pos - l.base;
+		vec2f l2 = vec2f{ r.pos.x + r.w, r.pos.y } - l.base ;
+		vec2f l3 = (r.pos + vec2f(r.w, r.h)) - l.base ;
+		vec2f l4 = vec2f{ r.pos.x, r.pos.y + r.h } - l.base ;
 
 		auto dot1 = dot(l1, n);
 		auto dot2 = dot(l2, n);
@@ -261,15 +261,15 @@ namespace MathHelper
 		return dot(p,p) <= dot(d,d);
 	}
 
-	bool isOverlap(const segment2& s, const AABBf& r)
+	bool isOverlap(const segment2& s, const rectf& r)
 	{
 		range segX{ s.a.x,s.b.x };
 		if (segX.min > segX.max) std::swap(segX.min, segX.max);
-		if (!isOverlap(segX.min, segX.max, r.Origin.x, r.Origin.x + r.Size.x)) return false;
+		if (!isOverlap(segX.min, segX.max, r.pos.x, r.pos.x + r.w)) return false;
 
 		range segY{ s.a.y,s.b.y };
 		if (segY.min > segY.max) std::swap(segY.min, segY.max);
-		return isOverlap(segY.min, segY.max, r.Origin.y, r.Origin.y + r.Size.y);
+		return isOverlap(segY.min, segY.max, r.pos.y, r.pos.y + r.h);
 	}
 
 	bool isOverlap(float minA, float maxA, float minB, float maxB)

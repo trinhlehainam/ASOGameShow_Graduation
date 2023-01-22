@@ -13,8 +13,8 @@
 #include "../Input/InputCommand.h"
 
 #include "../Component/TransformComponent.h"
-#include "../Component/Collider/CircleCollider.h"
 #include "../Component/Animation/Animator.h"
+#include "../Component/Collider/RigidBody2D.h"
 
 namespace
 {
@@ -51,17 +51,20 @@ void Player::Init(INPUT_DEVICE deviceId)
 	m_entity->SetTag("kinght");
 	m_entity->AddComponent<TransformComponent>(m_entity);
 	auto transform = m_entity->GetComponent<TransformComponent>();
-	transform->Pos = vec2f{ 100.0f,100.0f };
+	transform->Pos = vec2f{ 400.0f,50.0f };
 	transform->Scale = vec2f{ 1.5f,1.5f };
-	// m_entity->AddComponent<CircleCollider>(m_entity);
-	// auto collider = m_entity->GetComponent<CircleCollider>();
-	// collider->SetCenterPos(vec2f{ 100.0f, 100.0f });
-	// collider->SetRadius(32.0f);
 
 	m_entity->AddComponent<Animator>(m_entity);
 	auto animator = m_entity->GetComponent<Animator>();
 	animator->AddAnimatorController("playerAnimator");
-
+	
+	const auto& rigidBody = Physics::AddRigidBody(
+			m_entity, 
+			transform->Pos,
+			32.f * transform->Scale.x,
+			32.f * transform->Scale.y);
+	m_body = rigidBody;
+	rigidBody->SetMaxVelocity(700.f, 1200.f);
 }
 
 void Player::Update(float deltaTime_s)
@@ -73,15 +76,17 @@ void Player::Update(float deltaTime_s)
 	const auto& transform = m_entity->GetComponent<TransformComponent>();
 	auto animator = m_entity->GetComponent<Animator>();
 
-	if (m_input->IsPressed(INPUT_ID::UP))
-		speed.y = -100.0f;
-	else if (m_input->IsPressed(INPUT_ID::DOWN))
-		speed.y = 100.0f;
-	else if (m_input->IsPressed(INPUT_ID::LEFT))
-		speed.x = -100.0f;
+	if (m_input->IsPressed(INPUT_ID::LEFT))
+		speed.x = -200.0f;
 	else if (m_input->IsPressed(INPUT_ID::RIGHT))
-		speed.x = 100.0f;
-	transform->Pos += speed * deltaTime_s;
+		speed.x = 200.0f;
+
+	if (m_input->IsJustPressed(INPUT_ID::BTN1))
+		speed.y = -500.f;
+	else
+		speed.y = m_body->velocity_.y;
+
+	m_body->velocity_ = speed;
 
 	animator->SetFloat("speed", dot(speed, speed));
 
@@ -102,8 +107,8 @@ void Player::Render()
 #ifdef _DEBUG
 	const auto& transform = m_entity->GetComponent<TransformComponent>();
 	vec2f origin{ transform->Pos };
-	vec2f end = origin + dir * 50.0f;
-	DxLib::DrawLineAA(origin.x, origin.y, end.x, end.y, color, 2.0f);
+	vec2f end = origin + m_body->velocity_ * 0.16f;
+	DxLib::DrawLineAA(origin.x, origin.y, end.x, end.y, 0x00ff00, 2.0f);
 #endif
 }
 

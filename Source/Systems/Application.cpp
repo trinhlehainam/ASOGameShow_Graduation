@@ -211,7 +211,7 @@ void Application::Exit()
 
 void Application::Run()
 {
-    while (ProcessMessage() != -1 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+    while (ProcessMessage() != -1)
     {
         m_impl->Update();
         m_impl->Render();

@@ -24,6 +24,11 @@ void ICollider::SetOffset(const vec2f& offset)
 	m_offset = offset;
 }
 
+std::string ICollider::GetTag() const
+{
+	return m_tag;
+}
+
 bool ICollider::IsEnable() const
 {
 	return m_isEnable;

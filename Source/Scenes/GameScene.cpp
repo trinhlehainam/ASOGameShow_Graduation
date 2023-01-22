@@ -67,9 +67,11 @@ void GameScene::Update(float deltaTime_s)
 	{
 		Application::PushScene(std::make_unique<MenuScene>());
 	}	
-	
+
+	Physics::ApplyForce(deltaTime_s);
 	m_player->Update(deltaTime_s);
 	m_entityMng->Update(deltaTime_s);
+	Physics::PlatformResolution(deltaTime_s);
 }
 
 void GameScene::Render()
@@ -85,6 +87,7 @@ void GameScene::RenderToOwnScreen()
 	m_map->Render();
 	m_entityMng->Render();
 	m_player->Render();
+	Physics::Render();
 }
 
 std::unique_ptr<IScene> GameScene::ChangeScene(std::unique_ptr<IScene>)

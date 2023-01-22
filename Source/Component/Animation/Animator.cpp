@@ -144,7 +144,7 @@ void Animator::Impl::Render()
 	// TODO: Implement pivot(rotation center) variable
 	DxLib::DrawRectRotaGraphFast3F(trans->Pos.x, trans->Pos.y,
 		sourceX, sourceY, animation.celWidth, animation.celHeight,
-		32.0f, 32.0f,
+		animation.celWidth / 2.f, animation.celHeight / 2.f,
 		trans->Scale.x, trans->Scale.y, trans->Rotation, animation.texId, 1);
 }
 

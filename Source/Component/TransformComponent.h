@@ -22,5 +22,6 @@ public:
     void Update(float deltaTime_s) override;
     void Render() override;
 
+    vec2f GetLimitPosition(const vec2f& Pos);
 };
 

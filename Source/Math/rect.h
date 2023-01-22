@@ -16,10 +16,10 @@ struct rect
     rect& operator = (rect&&) = default;
 
     vec2<T> Center() const;
-    float Left() const;
-    float Top() const;
-    float Right() const;
-    float Bottom() const;
+    T Left() const;
+    T Top() const;
+    T Right() const;
+    T Bottom() const;
 };
 
 using recti = rect<int>;

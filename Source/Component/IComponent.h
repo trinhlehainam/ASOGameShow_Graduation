@@ -17,7 +17,7 @@ public:
 	bool IsOwnerExist();
 	std::shared_ptr<Entity> GetOwner();
 
-private:
+protected:
 	std::weak_ptr<Entity> m_owner;
 };
 

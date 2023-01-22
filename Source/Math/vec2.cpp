@@ -126,6 +126,14 @@ vec2<T> operator/(const vec2<T>& a, T scalar)
 	return vec2<T>(a.x / scalar, a.y / scalar);
 }
 
+template <typename T>
+vec2<T> operator/(const vec2<T>& lvec, const vec2<T>& rvec)
+{
+	auto valX = rvec.x < static_cast<T>(0) ? std::min(std::numeric_limits<T>::min(), rvec.x) : std::max(std::numeric_limits<T>::min(), rvec.x);
+	auto valY = rvec.y < static_cast<T>(0) ? std::min(std::numeric_limits<T>::min(), rvec.y) : std::max(std::numeric_limits<T>::min(), rvec.y);
+	return vec2<T>(lvec.x / valX, lvec.y / valY);	
+}
+
 template<typename T>
 vec2<T> operator%(const vec2<T>& a, int scalar)
 {
@@ -270,6 +278,7 @@ template vec2<type> operator - (const vec2<type>& a, const vec2<type>& b);		\
 template vec2<type> operator * (const vec2<type>& a, type scalar);				\
 template vec2<type> operator * (type scalar, const vec2<type>& a);				\
 template vec2<type> operator / (const vec2<type>& a, type scalar);				\
+template vec2<type> operator / (const vec2<type>& l, const vec2<type>& r);		\
 template vec2<type> operator % (const vec2<type>& a, int scalar);				\
 																				\
 template bool operator == (const vec2<type>& a, const vec2<type>& b);			\

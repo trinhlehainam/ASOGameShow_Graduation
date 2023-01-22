@@ -1,13 +1,14 @@
 #pragma once
 #include "ICollider.h"
-#include "../../Math/Geometry/AABB.h"
+#include "../../Math/rect.h"
+
 
 class BoxCollider :
     public ICollider
 {
 public:
     explicit BoxCollider(const std::shared_ptr<Entity>& owner);
-    explicit BoxCollider(const std::shared_ptr<Entity>& owner, const AABBf& boxInfo);
+    explicit BoxCollider(const std::shared_ptr<Entity>& owner, const rectf& boxInfo);
     ~BoxCollider();
 
     void SetOrigin(const vec2f& origin);
@@ -15,13 +16,13 @@ public:
 
     vec2f GetOrigin() const;
     vec2f GetSize() const;
-    AABBf GetCollider() const;
+    rectf GetCollider() const;
 public:
     void Init() override final;
     void Update(float deltaTime_s) override final;
     void Render() override final;
     COLLIDER_TYPE ColliderType() override final;
 private:
-    AABBf m_collider;
+    rectf m_collider;
 };
 

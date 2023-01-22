@@ -36,25 +36,25 @@ vec2<T> rect<T>::Center() const
 }
 
 template <class T>
-float rect<T>::Left() const
+T rect<T>::Left() const
 {
     return pos.x; 
 }
 
 template <class T>
-float rect<T>::Top() const
+T rect<T>::Top() const
 {
     return pos.y;
 }
 
 template <class T>
-float rect<T>::Right() const
+T rect<T>::Right() const
 {
     return pos.x + w;
 }
 
 template <class T>
-float rect<T>::Bottom() const
+T rect<T>::Bottom() const
 {
     return pos.y + h;
 }

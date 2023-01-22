@@ -32,6 +32,7 @@ template<typename T> vec2<T> operator * (const vec2<T>& a, T scalar);
 template<typename T> vec2<T> operator * (T scalar, const vec2<T>& a);
 template<typename T> T operator * (const vec2<T> a, const vec2<T>& b);		// Dot product
 template<typename T> vec2<T> operator / (const vec2<T>& a, T scalar);
+template<typename T> vec2<T> operator / (const vec2<T>& l, const vec2<T>& r);
 template<typename T> vec2<T> operator % (const vec2<T>& a, int scalar);
 
 template<typename T> bool operator == (const vec2<T>& a, T value);

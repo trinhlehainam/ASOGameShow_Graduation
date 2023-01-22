@@ -169,6 +169,7 @@ void TileMap::LoadMapDataFromXML(const std::string& fileName, const std::string&
 		transform->Pos = origin;
 		entity->AddComponent<BoxCollider>(entity);
 		auto collider = entity->GetComponent<BoxCollider>();
+		collider->m_tag = "tile-collision";
 		collider->SetOrigin(origin);
 		collider->SetSize(size);
 		entityMng->AddEntity(std::move(entity));

@@ -34,3 +34,8 @@ void TransformComponent::Update(float deltaTime_s)
 void TransformComponent::Render()
 {
 }
+
+vec2f TransformComponent::GetLimitPosition(const vec2f& Pos)
+{
+	return Pos;
+}

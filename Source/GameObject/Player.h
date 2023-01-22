@@ -1,10 +1,12 @@
 #pragma once
 #include <memory>
+
 #include "../Input/IInput.h"
 
 class Entity;
 class EntityMng;
 class InputCommand;
+class RigidBody2D;
 
 class Player
 {
@@ -19,6 +21,7 @@ public:
 	std::shared_ptr<Entity> GetEntity() const;
 private:
 	std::shared_ptr<Entity> m_entity;
+	std::shared_ptr<RigidBody2D> m_body;
 	std::shared_ptr<IInput> m_input;
 	std::shared_ptr<InputCommand> m_inputCommand;
 };
