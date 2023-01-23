@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <animatorController name ="playerAnimator" entryState="idle">
 	<parameter name="isAttack" type="1" value="0.0"/>
-	<parameter name="isImpact" type="1" value="0.0"/>
+	<parameter name="isDeath" type="1" value="0.0"/>
+	<parameter name="isGrounded" type="1" value="0.0"/>
 	<parameter name="speed" type="0" value="0.0"/>
   
 	<animatorState name ="attack" animationList="player" animationState="Attack">
@@ -17,8 +18,11 @@
 		<transition name ="" currentState="idle" destinationState="attack">
 			<condition mode ="0" paraName ="isAttack" threshold="1"/>
 		</transition>
-		<transition name ="" currentState="idle" destinationState="impact">
-			<condition mode ="0" paraName ="isImpact" threshold="1"/>
+		<transition name ="" currentState="idle" destinationState="death">
+			<condition mode ="0" paraName ="isDeath" threshold="1"/>
+		</transition>
+		<transition name ="" currentState="idle" destinationState="jump">
+			<condition mode ="0" paraName ="isGrounded" threshold="0"/>
 		</transition>
 	</animatorState>
   
@@ -26,14 +30,20 @@
 		<transition name ="" currentState="run" destinationState="idle">
 			<condition mode ="4" paraName ="speed" threshold="0"/>
 		</transition>
-		<transition name ="" currentState="run" destinationState="impact">
-			<condition mode ="0" paraName ="isImpact" threshold="1"/>
+		<transition name ="" currentState="run" destinationState="death">
+			<condition mode ="0" paraName ="isDeath" threshold="1"/>
 		</transition>
 	</animatorState>
-  
-	<animatorState name ="impact" animationList="player" animationState="Death">
- 		<transition name ="" currentState="impact" destinationState="idle">
- 			<condition mode ="1" paraName ="isImpact" threshold="0"/>
+
+	<animatorState name ="Jump" animationList="player" animationState="Jump">
+		<transition name ="" currentState="jump" destinationState="idle">
+			<condition mode ="0" paraName ="isGrounded" threshold="1"/>
+		</transition>
+	</animatorState>
+	
+	<animatorState name ="death" animationList="player" animationState="Death">
+ 		<transition name ="" currentState="death" destinationState="idle">
+ 			<condition mode ="1" paraName ="isDeath" threshold="0"/>
  		</transition>
 	</animatorState>
 </animatorController>

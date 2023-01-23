@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<animationGroup name="player" celwidth="32" celheight="32" celcount="4" columns="4">
+    <image source="Assets/Textures/Character/Player/adventurer-roll-sheet.png" width="128" height="32"/>
+    <animation name="Jump" id="0" count="4" loop="-1">
+        <duration encoding="csv">
+            100,100,100,100
+        </duration>
+    </animation>
+</animationGroup>

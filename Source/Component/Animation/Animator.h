@@ -19,6 +19,8 @@ public:
 	bool GetBool(const std::string& name);
 	int GetInteger(const std::string& name);
 
+	void SetFlip(bool isFlipped);
+
 	void Play(const std::string& animatorState);
 
 public:

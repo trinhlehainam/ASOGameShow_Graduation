@@ -58,13 +58,14 @@ private:
 	int currentDurationID;
 	int timer_ms;
 	int loopCount;
+	bool isFlipped;
 };
 
 Animator::Impl::Impl(const std::shared_ptr<Entity>& owner) :
 	updateFunc(&Impl::UpdateSleep),
 	checkTransFunc(&Impl::Sleep),
 	transform(owner->GetComponent<TransformComponent>()), 
-	currentDurationID(0), timer_ms(0), loopCount(0) 
+	currentDurationID(0), timer_ms(0), loopCount(0), isFlipped(false)
 	{}
 Animator::Impl::~Impl() { }
 
@@ -145,7 +146,8 @@ void Animator::Impl::Render()
 	DxLib::DrawRectRotaGraphFast3F(trans->Pos.x, trans->Pos.y,
 		sourceX, sourceY, animation.celWidth, animation.celHeight,
 		animation.celWidth / 2.f, animation.celHeight / 2.f,
-		trans->Scale.x, trans->Scale.y, trans->Rotation, animation.texId, 1);
+		trans->Scale.x, trans->Scale.y, trans->Rotation, animation.texId, 1,
+		isFlipped);
 }
 
 void Animator::Impl::UpdateInfinite(float deltaTime_s)
@@ -296,6 +298,11 @@ int Animator::GetInteger(const std::string& name)
 	assert(animator.HasParameter(name));
 	assert(animator.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::INTEGER);
 	return static_cast<int>(animator.paramMap.at(name).value);
+}
+
+void Animator::SetFlip(bool isFlipped)
+{
+	m_impl->isFlipped = isFlipped;
 }
 
 void Animator::Play(const std::string& animatorState)
