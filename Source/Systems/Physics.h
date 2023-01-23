@@ -28,6 +28,8 @@ public:
     static void Update(float DeltaTime);
     static void PlatformResolution(float DeltaTime);
     static void Render();
+    static void RemoveColliders();
+    static void ClearData();
 
     static bool RayCast(const vec2f& origin, const vec2f& dir, float maxDistance);
     static bool CheckSweptAABB(HitInfo& hitInfo, const rectf& main, const vec2f& vec, const rectf& target,

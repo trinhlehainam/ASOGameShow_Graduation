@@ -16,6 +16,29 @@
 
 GenerateDynamicSingleton(Physics);
 
+namespace
+{
+    template <typename T>
+    void ProcessRemoveCollider(std::vector<std::shared_ptr<T>>& container)
+    {
+        container.erase(std::remove_if(container.begin(), container.end(), [](std::shared_ptr<T>& collider)
+                        {
+                            return !collider->IsOwnerExist();
+                        }),
+                        container.end());
+    }
+
+    template <typename T>
+    void ProcessRemoveCollider(std::vector<T>& container)
+    {
+        container.erase(std::remove_if(container.begin(), container.end(), [](T& collider)
+                        {
+                            return !collider.IsOwnerExist();
+                        }),
+                        container.end());
+    }
+}
+
 bool Physics::RayCast(const vec2f& origin, const vec2f& dir, float maxDistance)
 {
     segment2 seg{origin, origin + unitVec(dir) * maxDistance};
@@ -112,6 +135,8 @@ void Physics::Update(float DeltaTime)
 
     for (auto& actorBody : m_instance->m_actorBodies)
         actorBody->Update(DeltaTime);
+
+    RemoveColliders();
 }
 
 void Physics::PlatformResolution(float deltaTime)
@@ -166,15 +191,24 @@ void Physics::PlatformResolution(float deltaTime)
             }
         }
     }
-
-    for (auto& actorBody : m_instance->m_actorBodies)
-        actorBody->Update(deltaTime);
 }
 
 void Physics::Render()
 {
     for (auto& actorBody : m_instance->m_actorBodies)
         actorBody->Render();
+}
+
+void Physics::RemoveColliders()
+{
+    ProcessRemoveCollider(m_instance->m_colliders);
+    ProcessRemoveCollider(m_instance->m_actorBodies);
+}
+
+void Physics::ClearData()
+{
+    m_instance->m_colliders.clear();
+    m_instance->m_actorBodies.clear();
 }
 
 Physics::Physics()

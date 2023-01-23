@@ -103,6 +103,11 @@ void MenuScene::RenderToOwnScreen()
 	(this->*drawFunc_)();
 }
 
+void MenuScene::Render()
+{
+	DxLib::DrawGraphF(m_screenOffsetX, m_screenOffsetY, m_screenID, 1);
+}
+
 std::unique_ptr<IScene> MenuScene::ChangeScene(std::unique_ptr<IScene> scene)
 {
     IsChangeSceneRequested = false;

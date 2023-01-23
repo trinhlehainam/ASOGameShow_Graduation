@@ -28,12 +28,12 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
+	m_entityMng->ClearData();
+	Physics::ClearData();
 }
 
 bool GameScene::Init()
 {
-	AnimationMng::LoadFromXML("Assets/Animations/animation.xml");
-	AnimatorControllerMng::LoadFromXML("Assets/Animators/playerAnimator.xml");
 
 	m_map = std::make_shared<TileMap>(m_entityMng, "Assets/Map/map.xml", "map");
 	m_player = std::make_shared<Player>(m_entityMng);
@@ -72,6 +72,7 @@ void GameScene::Update(float deltaTime_s)
 	m_player->Update(deltaTime_s);
 	m_entityMng->Update(deltaTime_s);
 	Physics::PlatformResolution(deltaTime_s);
+	Physics::Update(deltaTime_s);
 }
 
 void GameScene::Render()

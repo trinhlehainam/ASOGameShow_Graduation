@@ -38,6 +38,8 @@ public:
 	template<typename T>
 	std::shared_ptr<T> GetComponent();
 
+	void Destroy();
+
 private:
 	std::vector<std::shared_ptr<IComponent>> m_components;
 	// type_info's data deleted DEFAULT constructor

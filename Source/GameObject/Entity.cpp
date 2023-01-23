@@ -70,6 +70,11 @@ void Entity::Render()
 		component->Render();
 }
 
+void Entity::Destroy()
+{
+	m_entityMng.lock()->RequestDestroy();
+}
+
 template<typename T>
 void Entity::AddComponent(const std::shared_ptr<Entity>& owner)
 {

@@ -17,6 +17,7 @@ public:
 	void Init(INPUT_DEVICE deviceId);
 	void Update(float deltaTime_s);
 	void Render();
+	void Destroy();
 
 	std::shared_ptr<Entity> GetEntity() const;
 private:

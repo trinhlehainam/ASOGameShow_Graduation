@@ -48,7 +48,7 @@ void Player::Init(INPUT_DEVICE deviceId)
 	m_inputCommand = std::make_shared<InputCommand>(m_input);
 	m_inputCommand->LoadPatternFromXML("Assets/InputPatterns/inputpattern.xml");
 
-	m_entity->SetTag("kinght");
+	m_entity->SetTag("knight");
 	m_entity->AddComponent<TransformComponent>(m_entity);
 	auto transform = m_entity->GetComponent<TransformComponent>();
 	transform->Pos = vec2f{ 400.0f,50.0f };
@@ -110,6 +110,11 @@ void Player::Render()
 	vec2f end = origin + m_body->velocity_ * 0.16f;
 	DxLib::DrawLineAA(origin.x, origin.y, end.x, end.y, 0x00ff00, 2.0f);
 #endif
+}
+
+void Player::Destroy()
+{
+	m_entity->Destroy();
 }
 
 std::shared_ptr<Entity> Player::GetEntity() const

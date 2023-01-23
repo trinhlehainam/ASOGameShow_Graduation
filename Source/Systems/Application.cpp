@@ -69,12 +69,16 @@ void Application::Impl::Render()
 #ifdef _DEBUG
     _dbgStartDraw();
 #endif
-    m_scenes.back()->RenderToOwnScreen();
+    for (const auto& scene : m_scenes)
+        scene->RenderToOwnScreen();
+    // m_scenes.back()->RenderToOwnScreen();
 
     // Render to screen back
     SetDrawScreen(DX_SCREEN_BACK);
     ClearDrawScreen();
-    m_scenes.back()->Render();
+    // m_scenes.back()->Render();
+    for (const auto& scene : m_scenes)
+        scene->Render();
     // Show FPS
 #ifdef _DEBUG
     DrawFormatString(20, 10, GetColor(255, 255, 255), "FPS : %.f", 1.0f / m_deltaTime_s);
@@ -192,6 +196,9 @@ bool Application::Init()
     AnimationMng::Create();
     AnimatorControllerMng::Create();
 
+	AnimationMng::LoadFromXML("Assets/Animations/animation.xml");
+	AnimatorControllerMng::LoadFromXML("Assets/Animators/playerAnimator.xml");
+    
     m_impl->m_scenes.emplace_back(std::make_unique<TitleScene>());
     m_impl->m_scenes.back()->Init();
 

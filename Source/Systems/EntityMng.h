@@ -20,6 +20,9 @@ public:
 
 	void Update(float deltaTime_s);
 	void Render();
+
+	void RequestDestroy();
+	void ClearData();
 private:
 	std::vector<std::shared_ptr<Entity>> m_entities;
 	std::unordered_map<int, std::shared_ptr<Entity>> m_entityMap;
@@ -28,6 +31,7 @@ private:
 
 	int m_currentID;
 
+	bool m_isRemoveEntities;
 private:
 	// Allow IScene to set up m_self point to this
 	friend class IScene;
