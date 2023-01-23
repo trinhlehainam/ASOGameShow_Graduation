@@ -13,6 +13,7 @@ public:
 	static bool Initialize();
 	static void Execute();
 	static void Terminate();
+	static void RequestTerminate();
 
 	static void ChangeScene(std::unique_ptr<IScene> scene);
 	static void ClearScene();

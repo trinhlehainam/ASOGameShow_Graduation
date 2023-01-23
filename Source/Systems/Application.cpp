@@ -39,12 +39,14 @@ public:
     std::deque<std::unique_ptr<IScene>> m_scenes;
     std::chrono::steady_clock::time_point m_lastTime;
     float m_deltaTime_s;
+
+    bool m_isRunning;
 };
 
 Application::Impl::Impl() :
     m_controller(std::make_unique<Controller>()),
     m_lastTime(std::chrono::high_resolution_clock::now()),
-    m_deltaTime_s(0.0f)
+    m_deltaTime_s(0.0f), m_isRunning(true)
 {
 }
 
@@ -132,6 +134,11 @@ void Application::Terminate()
     AppInstance = nullptr;
 }
 
+void Application::RequestTerminate()
+{
+    AppInstance->m_impl->m_isRunning = false;
+}
+
 void Application::ChangeScene(std::unique_ptr<IScene> scene)
 {
     if (!AppInstance) return;
@@ -201,6 +208,7 @@ bool Application::Init()
 	AnimationMng::LoadFromXML("Assets/Animations/playerRun.xml");
 	AnimationMng::LoadFromXML("Assets/Animations/playerAttack1.xml");
 	AnimationMng::LoadFromXML("Assets/Animations/playerDeath.xml");
+	AnimationMng::LoadFromXML("Assets/Animations/playerJump.xml");
     
 	AnimatorControllerMng::LoadFromXML("Assets/Animators/playerAnimator.xml");
     
@@ -212,7 +220,6 @@ bool Application::Init()
 
 void Application::Exit()
 {
-    m_impl.release();
     TextureMng::Destroy();
     AnimationMng::Destroy();
     AnimatorControllerMng::Destroy();
@@ -223,7 +230,7 @@ void Application::Exit()
 
 void Application::Run()
 {
-    while (ProcessMessage() != -1)
+    while (ProcessMessage() != -1 && m_impl->m_isRunning)
     {
         m_impl->Update();
         m_impl->Render();

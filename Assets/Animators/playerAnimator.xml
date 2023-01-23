@@ -22,7 +22,7 @@
 			<condition mode ="0" paraName ="isDeath" threshold="1"/>
 		</transition>
 		<transition name ="" currentState="idle" destinationState="jump">
-			<condition mode ="0" paraName ="isGrounded" threshold="0"/>
+			<condition mode ="1" paraName ="isGrounded" threshold="0"/>
 		</transition>
 	</animatorState>
   
@@ -33,17 +33,20 @@
 		<transition name ="" currentState="run" destinationState="death">
 			<condition mode ="0" paraName ="isDeath" threshold="1"/>
 		</transition>
+		<transition name ="" currentState="run" destinationState="jump">
+			<condition mode ="1" paraName ="isGrounded" threshold="0"/>
+		</transition>
 	</animatorState>
 
-	<animatorState name ="Jump" animationList="player" animationState="Jump">
+	<animatorState name ="jump" animationList="player" animationState="Jump">
 		<transition name ="" currentState="jump" destinationState="idle">
 			<condition mode ="0" paraName ="isGrounded" threshold="1"/>
+		</transition>
+		<transition name ="" currentState="jump" destinationState="death">
+			<condition mode ="0" paraName ="isDeath" threshold="1"/>
 		</transition>
 	</animatorState>
 	
 	<animatorState name ="death" animationList="player" animationState="Death">
- 		<transition name ="" currentState="death" destinationState="idle">
- 			<condition mode ="1" paraName ="isDeath" threshold="0"/>
- 		</transition>
 	</animatorState>
 </animatorController>

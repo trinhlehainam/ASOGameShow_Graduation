@@ -25,6 +25,7 @@ namespace
 Player::Player(const std::shared_ptr<EntityMng>& entityMng): m_entity(std::make_shared<Entity>(entityMng))
 {
     entityMng->AddEntity(m_entity);
+    isJumpRequested = false;
 }
 
 Player::~Player()
@@ -71,7 +72,7 @@ void Player::Update(float deltaTime_s)
 {
     m_input->Update();
     m_inputCommand->Update();
-    auto speed = vec2f{0.0f, 0.0f};
+    auto speed = vec2f{0.0f, m_body->velocity_.y};
 
     const auto& transform = m_entity->GetComponent<TransformComponent>();
     auto animator = m_entity->GetComponent<Animator>();
@@ -88,11 +89,7 @@ void Player::Update(float deltaTime_s)
     }
 
     if (m_input->IsJustPressed(INPUT_ID::BTN2))
-        speed.y = -500.f;
-    else
-        speed.y = m_body->velocity_.y;
-
-    m_body->velocity_ = speed;
+        isJumpRequested = true;
 
 
     animator->SetFloat("speed", m_body->velocity_.x);
@@ -101,11 +98,18 @@ void Player::Update(float deltaTime_s)
 
     animator->SetBool("isDeath", m_inputCommand->IsMatch("combo-2", 0.5f));
 
-    if (speed != 0.0f)
+    bool isGrounded = Physics::RayCast(transform->Pos, vec2f(0.f, m_body->m_offset.y), m_body->m_offset.y + 3.f);
+
+    animator->SetBool("isGrounded", isGrounded);
+
+    if (isJumpRequested && isGrounded)
     {
-        dir = unitVec(speed);
-        color = Physics::RayCast(transform->Pos, dir, 50.0f) ? 0xff0000 : 0x00ff00;
+        speed.y = -500.f;
     }
+    
+    isJumpRequested = false;
+    
+    m_body->velocity_ = speed;
 }
 
 void Player::Render()
@@ -113,7 +117,7 @@ void Player::Render()
 #ifdef _DEBUG
     const auto& transform = m_entity->GetComponent<TransformComponent>();
     vec2f origin{transform->Pos};
-    vec2f end = origin + m_body->velocity_ * 0.16f;
+    vec2f end = origin + vec2f(0.f, m_body->m_offset.y + 3.f);
     DxLib::DrawLineAA(origin.x, origin.y, end.x, end.y, 0x00ff00, 2.0f);
 #endif
 }

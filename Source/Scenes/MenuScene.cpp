@@ -70,7 +70,7 @@ MenuScene::MenuScene()
 	menuItems_.emplace_back("ゲームを終了", vec2f(x, y),
 		[this]()
 		{
-			Application::Terminate();
+			Application::RequestTerminate();
 		});
 
 	itemSize = static_cast<int>(menuItems_.size());

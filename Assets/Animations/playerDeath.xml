@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <animationGroup name="player" celwidth="32" celheight="32" celcount="6" columns="6">
     <image source="Assets/Textures/Character/Player/adventurer-death-sheet.png" width="192" height="32"/>
-    <animation name="Death" id="0" count="6" loop="1">
+    <animation name="Death" id="0" count="6" loop="0">
         <duration encoding="csv">
             100,100,100,100,100,100
         </duration>

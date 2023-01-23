@@ -25,5 +25,7 @@ private:
 	std::shared_ptr<RigidBody2D> m_body;
 	std::shared_ptr<IInput> m_input;
 	std::shared_ptr<InputCommand> m_inputCommand;
+
+	bool isJumpRequested;
 };
 

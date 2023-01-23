@@ -46,25 +46,18 @@ bool Physics::RayCast(const vec2f& origin, const vec2f& dir, float maxDistance)
     {
         auto pCollider_checked = pCollider;
         auto collider_type = pCollider_checked->ColliderType();
-        switch (collider_type)
-        {
-        case COLLIDER_TYPE::BOX:
+        if (collider_type == COLLIDER_TYPE::BOX)
             {
                 auto boxCollider = std::dynamic_pointer_cast<BoxCollider>(pCollider_checked);
                 if (MathHelper::isOverlap(seg, boxCollider->GetCollider()))
                     return true;
             }
-            break;
-        case COLLIDER_TYPE::CIRCLE:
+        else if (collider_type ==  COLLIDER_TYPE::CIRCLE)
             {
                 auto cirCollider = std::dynamic_pointer_cast<CircleCollider>(pCollider_checked);
                 if (MathHelper::isOverlap(seg, cirCollider->GetCollider()))
                     return true;
             }
-            break;
-        default:
-            break;
-        }
     }
     return false;
 }
@@ -207,6 +200,7 @@ void Physics::RemoveColliders()
 
 void Physics::ClearData()
 {
+    if (!m_instance) return;
     m_instance->m_colliders.clear();
     m_instance->m_actorBodies.clear();
 }
