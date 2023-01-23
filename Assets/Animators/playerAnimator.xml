@@ -4,13 +4,13 @@
 	<parameter name="isImpact" type="1" value="0.0"/>
 	<parameter name="speed" type="0" value="0.0"/>
   
-	<animatorState name ="attack" animationList="knight" animationState="Attack">
+	<animatorState name ="attack" animationList="player" animationState="Attack">
 		<transition name ="" currentState="attack" destinationState="idle">
 			<condition mode ="1" paraName ="isAttack" threshold="0"/>
 		</transition>
 	</animatorState>
   
-	<animatorState name ="idle" animationList="knight" animationState="Idle">
+	<animatorState name ="idle" animationList="player" animationState="Idle">
 		<transition name ="" currentState="idle" destinationState="run">
 			<condition mode ="5" paraName ="speed" threshold="0"/>
 		</transition>
@@ -22,7 +22,7 @@
 		</transition>
 	</animatorState>
   
-	<animatorState name ="run" animationList="knight" animationState="Run">
+	<animatorState name ="run" animationList="player" animationState="Run">
 		<transition name ="" currentState="run" destinationState="idle">
 			<condition mode ="4" paraName ="speed" threshold="0"/>
 		</transition>
@@ -31,7 +31,7 @@
 		</transition>
 	</animatorState>
   
-	<animatorState name ="impact" animationList="knight" animationState="Dead">
+	<animatorState name ="impact" animationList="player" animationState="Death">
  		<transition name ="" currentState="impact" destinationState="idle">
  			<condition mode ="1" paraName ="isImpact" threshold="0"/>
  		</transition>

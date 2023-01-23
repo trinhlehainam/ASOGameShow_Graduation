@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Component\Animation\AnimatorController.cpp" />
     <ClCompile Include="Source\Component\Collider\RigidBody2D.cpp" />
+    <ClCompile Include="Source\Component\HealthComponent.cpp" />
     <ClCompile Include="Source\Math\Geometry\Box.cpp" />
     <ClCompile Include="Source\Math\rect.cpp" />
     <ClCompile Include="Source\Scenes\MenuScene.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Source\Component\Animation\AnimatorController.h" />
     <ClInclude Include="Source\Component\Animation\AnimatorParameter.h" />
     <ClInclude Include="Source\Component\Collider\RigidBody2D.h" />
+    <ClInclude Include="Source\Component\HealthComponent.h" />
     <ClInclude Include="Source\Math\HitInfo.h" />
     <ClInclude Include="Source\Math\rect.h" />
     <ClInclude Include="Source\Scenes\MenuScene.h" />

@@ -196,7 +196,12 @@ bool Application::Init()
     AnimationMng::Create();
     AnimatorControllerMng::Create();
 
-	AnimationMng::LoadFromXML("Assets/Animations/animation.xml");
+	// AnimationMng::LoadFromXML("Assets/Animations/animation.xml");
+	AnimationMng::LoadFromXML("Assets/Animations/playerIdle.xml");
+	AnimationMng::LoadFromXML("Assets/Animations/playerRun.xml");
+	AnimationMng::LoadFromXML("Assets/Animations/playerAttack1.xml");
+	AnimationMng::LoadFromXML("Assets/Animations/playerDeath.xml");
+    
 	AnimatorControllerMng::LoadFromXML("Assets/Animators/playerAnimator.xml");
     
     m_impl->m_scenes.emplace_back(std::make_unique<TitleScene>());

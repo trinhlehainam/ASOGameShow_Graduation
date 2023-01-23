@@ -42,16 +42,16 @@ bool AnimationMng::LoadFromXML(const std::string& file)
 	}
 	m_instance->m_durations_ms.reserve(m_instance->m_durations_ms.size() + celCount);
 
-	if (m_instance->m_listMap.count(listName)) return false;
 	auto& animationMap = m_instance->m_listMap[listName];
 
 	auto pImage = pAminationList->first_node("image");
+	std::string sourceKey;
 	for (auto pAttr = pImage->first_attribute(); pAttr; pAttr = pAttr->next_attribute())
 	{
 		if (strcmp(pAttr->name(), "source") == 0)
 		{
-			auto& imgMng = TextureMng::Instance();
-			imgMng.AddImage(pAttr->value(), listName);
+			sourceKey = pAttr->value();
+			TextureMng::AddImage(pAttr->value(), sourceKey);
 		}
 	}
 
@@ -63,7 +63,8 @@ bool AnimationMng::LoadFromXML(const std::string& file)
 			if (strcmp(pAttr->name(), "name") == 0)
 			{
 				animKey = listName + kConnectTag + pAttr->value();
-				animationMap[animKey].texId = TextureMng::GetID(listName);
+				assert(!animationMap.count(animKey));
+				animationMap[animKey].texId = TextureMng::GetID(sourceKey);
 				animationMap[animKey].texColumns = texColumns;
 				animationMap[animKey].celWidth = celWidth;
 				animationMap[animKey].celHeight = celHeight;

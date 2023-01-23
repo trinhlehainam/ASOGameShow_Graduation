@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<animationGroup name="player" celwidth="32" celheight="32" celcount="5" columns="5">
+    <image source="Assets/Textures/Character/Player/adventurer-attack1-sheet.png" width="210" height="32"/>
+    <animation name="Run" id="0" count="5" loop="-1">
+        <duration encoding="csv">
+            100,100,100,100,100
+        </duration>
+    </animation>
+</animationGroup>
