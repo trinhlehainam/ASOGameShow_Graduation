@@ -14,19 +14,12 @@ GenerateDynamicSingleton(Time);
 
 float Time::ProcessDeltaTime()
 {
-    return DxLib::GetNowCount() - lastTicks_;
-}
-
-void Time::UpdateTicks()
-{
-    timeScale_ = MathHelper::clamp(timeScale_, 0.0f, 1.0f);
-    deltaTime_ = ProcessDeltaTime() / static_cast<float>(second_to_millisecond) * timeScale_;
-    lastTicks_ = DxLib::GetNowCount();
+    return DxLib::GetNowCount() - m_lastTicks_ms;
 }
 
 void Time::SetTimeScale(const float& time)
 {
-    timeScale_ = time;
+    m_timeScale = time;
 }
 
 unsigned int Time::MillisecondsPerFrame(const unsigned int& frameRate)
@@ -34,60 +27,58 @@ unsigned int Time::MillisecondsPerFrame(const unsigned int& frameRate)
     return second_to_millisecond / frameRate;
 }
 
-void Time::FixedFrameRate()
+void Time::UpdateTicks()
 {
-    int timeToWait = MillisecondsPerFrame(frameRate_) - ProcessDeltaTime();
-    if (timeToWait > 0 && timeToWait <= MillisecondsPerFrame(frameRate_)) Delay(timeToWait);
-    UpdateTicks();
+    int timeToWait = MillisecondsPerFrame(m_frameRate) - ProcessDeltaTime();
+    if (timeToWait > 0 && timeToWait <= MillisecondsPerFrame(m_frameRate)) Delay(timeToWait);
+    m_timeScale = MathHelper::clamp(m_timeScale, 0.0f, 1.0f);
+    m_fixedDeltaTime_s = ProcessDeltaTime() / static_cast<float>(second_to_millisecond);
+    m_deltaTime_s = m_fixedDeltaTime_s * m_timeScale;
+    m_lastTicks_ms = DxLib::GetNowCount();
 }
 
 void Time::SetFrameRate(const unsigned int& frameRate)
 {
-    frameRate_ = frameRate;
-    fixedDeltaTime_ = MillisecondsPerFrame(frameRate_) / static_cast<float>(second_to_millisecond);
+    m_frameRate = frameRate;
+    m_fixedDeltaTime_s = MillisecondsPerFrame(m_frameRate) / static_cast<float>(second_to_millisecond);
 }
 
 unsigned int Time::GetFrameRate() const
 {
-    return frameRate_;
+    return m_frameRate;
 }
 
-float Time::DeltaTimeF() const
+float Time::DeltaTime_s() const
 {
-    return deltaTime_;
+    return m_deltaTime_s;
 }
 
-unsigned int Time::GetCurrentTicks() const
+unsigned int Time::GetCurrentTicks_ms() const
 {
     return DxLib::GetNowCount();
 }
 
-unsigned int Time::DeltaTime() const
+unsigned int Time::DeltaTime_ms() const
 {
-    return DeltaTimeF() * second_to_millisecond;
+    return DeltaTime_s() * second_to_millisecond;
 }
 
-float Time::GetCurrentTicksF() const
+float Time::GetCurrentTicks_s() const
 {
     return DxLib::GetNowCount() / static_cast<float>(second_to_millisecond);
 }
 
-void Time::SetFixedDeltaTimeF(const float& time)
+float Time::FixedDeltaTime_s() const
 {
-    fixedDeltaTime_ = time;
+    return m_fixedDeltaTime_s;
 }
 
-float Time::FixedDeltaTimeF() const
-{
-    return fixedDeltaTime_;
-}
-
-void Time::Delay(const int& time)
+void Time::Delay(int time)
 {
     DxLib::WaitTimer(time);
 }
 
-void Time::DelayF(const float& time)
+void Time::Delay(float time_s)
 {
-    DxLib::WaitTimer(time * second_to_millisecond);
+    DxLib::WaitTimer(time_s * second_to_millisecond);
 }

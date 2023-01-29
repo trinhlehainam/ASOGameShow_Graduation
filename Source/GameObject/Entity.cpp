@@ -7,21 +7,20 @@
 #include "../Component/Collider/BoxCollider.h"
 #include "../Component/Collider/CircleCollider.h"
 #include "../Component/Animation/Animator.h"
-#include "../Input/JoypadXInput.h"
 
-Entity::Entity():m_isActive(true), m_id(-1)
+Entity::Entity():m_isActive(true), m_id(-1), m_useFixedFrameRate(false) 
 {
 }
 
-Entity::Entity(std::string tag) : m_isActive(true), m_tag(std::move(tag)), m_id(-1)
+Entity::Entity(std::string tag) : m_isActive(true), m_tag(std::move(tag)), m_id(-1), m_useFixedFrameRate(false)
 {
 }
 
-Entity::Entity(const std::shared_ptr<EntityMng>& entityMng):m_isActive(true), m_id(-1), m_entityMng(entityMng)
+Entity::Entity(const std::shared_ptr<EntityMng>& entityMng):m_isActive(true), m_id(-1), m_useFixedFrameRate(false), m_entityMng(entityMng)
 {
 }
 
-Entity::Entity(const std::shared_ptr<EntityMng>& entityMng, std::string tag):m_isActive(true), m_tag(std::move(tag)), m_id(-1), m_entityMng(entityMng)
+Entity::Entity(const std::shared_ptr<EntityMng>& entityMng, std::string tag):m_isActive(true), m_tag(std::move(tag)), m_id(-1), m_useFixedFrameRate(false), m_entityMng(entityMng)
 {
 }
 
@@ -37,6 +36,11 @@ void Entity::SetActive(bool activeFlag)
 void Entity::SetTag(std::string tag)
 {
 	m_tag = std::move(tag);
+}
+
+void Entity::SetFixedFrameRate(bool isFixedFrameRate)
+{
+	m_useFixedFrameRate = isFixedFrameRate;
 }
 
 void Entity::SetEntityMng(const std::shared_ptr<EntityMng>& entityMng)

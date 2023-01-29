@@ -20,7 +20,7 @@ private:
     vec2f maxVelocity_ = vec2f(700, 700);
 
     using Update_t = void(RigidBody2D::*)(const float&);
-    Update_t updater_;
+    Update_t physicsUpdater_;
 
     void NormalUpdate(const float&);
     void ImpactUpdate(const float&);
@@ -35,6 +35,7 @@ public:
 	
     void Init() override;
     void Update(float deltaTime) override;
+    void PhysicsUpdate(float deltaTime);
     void Render() override;
     COLLIDER_TYPE ColliderType() override;
     void SetMaxVelocity(const float& velX, const float& velY);

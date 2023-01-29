@@ -15,6 +15,7 @@
 #include "../Component/TransformComponent.h"
 #include "../Component/Animation/Animator.h"
 #include "../Component/Collider/RigidBody2D.h"
+#include "../Systems/Time.h"
 
 namespace
 {
@@ -108,7 +109,8 @@ void Player::Update(float deltaTime_s)
     }
     
     isJumpRequested = false;
-    
+
+    const auto& time = Time::Instance();
     m_body->velocity_ = speed;
 }
 

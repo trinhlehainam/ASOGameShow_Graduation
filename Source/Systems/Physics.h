@@ -35,7 +35,8 @@ public:
     static bool CheckSweptAABB(HitInfo& hitInfo, const rectf& main, const vec2f& vec, const rectf& target,
                                float deltaTime);
     static bool RayCast(HitInfo& hitInfo, const vec2f& ray_point, const vec2f& ray_dir, const rectf& target);
-    static std::shared_ptr<RigidBody2D>& AddRigidBody(const std::shared_ptr<Entity>& owner, const vec2f& pos, const float&w, const float& h);
+    static std::shared_ptr<RigidBody2D>& AddRigidBody(const std::shared_ptr<Entity>& owner, const vec2f& pos,
+                                                      const float& w, const float& h);
 private:
     Physics();
     ~Physics();
@@ -49,6 +50,6 @@ private:
 private:
     std::vector<std::shared_ptr<ICollider>> m_colliders;
     std::vector<std::shared_ptr<RigidBody2D>> m_actorBodies;
-	 
+
     static Physics* m_instance;
 };

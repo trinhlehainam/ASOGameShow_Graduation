@@ -15,6 +15,7 @@
 #include "../GameObject/Entity.h"
 #include "../Systems/Application.h"
 #include "../Systems/Controller.h"
+#include "../Systems/Time.h"
 
 namespace
 {
@@ -68,9 +69,18 @@ void GameScene::Update(float deltaTime_s)
 		Application::PushScene(std::make_unique<MenuScene>());
 	}	
 
-	Physics::ApplyForce(deltaTime_s);
+	const auto& time = Time::Instance();
+
+	// Player Input
 	m_player->Update(deltaTime_s);
+	
+	// Apply Physics Force and Momentum
+	Physics::ApplyForce(time.DeltaTime_s());
+	
+	// Update all Entities Components
 	m_entityMng->Update(deltaTime_s);
+	
+	// Physics Collision and Resolution
 	Physics::PlatformResolution(deltaTime_s);
 	Physics::Update(deltaTime_s);
 }

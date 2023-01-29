@@ -119,6 +119,11 @@ void Physics::ApplyForce(float DeltaTime)
 {
     for (auto& actorBody : m_instance->m_actorBodies)
         actorBody->velocity_.y += 1500.f * DeltaTime;
+
+    for (auto& actorBody : m_instance->m_actorBodies)
+    {
+        actorBody->PhysicsUpdate(DeltaTime);
+    }
 }
 
 void Physics::Update(float DeltaTime)

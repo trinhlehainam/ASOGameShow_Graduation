@@ -14,14 +14,13 @@ RigidBody2D::RigidBody2D(const std::shared_ptr<Entity>& owner,
 	m_collider.pos.x = transform->Pos.x - m_offset.x;
 	m_collider.pos.y = transform->Pos.y - m_offset.y;
 	destRect_ = m_collider;
-	updater_ = &RigidBody2D::NormalUpdate;
+	physicsUpdater_ = &RigidBody2D::NormalUpdate;
 }
 
 void RigidBody2D::NormalUpdate(const float& deltaTime)
 {
 	velocity_.x = MathHelper::clamp(velocity_.x, -maxVelocity_.x, maxVelocity_.x);
 	velocity_.y = MathHelper::clamp(velocity_.y, -maxVelocity_.y, maxVelocity_.y);
-	m_collider.pos += velocity_ * deltaTime;
 }
 
 void RigidBody2D::Update(float deltaTime)
@@ -31,11 +30,15 @@ void RigidBody2D::Update(float deltaTime)
 
 	auto transform = m_owner.lock()->GetComponent<TransformComponent>();
 
-	(this->*updater_)(deltaTime);
-
 	// collider_.pos = transform->GetLimitPosition(collider_.pos);
+	m_collider.pos += velocity_ * deltaTime;
 	transform->Pos.x = m_collider.pos.x + m_offset.x ;
 	transform->Pos.y = m_collider.pos.y + m_offset.y ;
+}
+
+void RigidBody2D::PhysicsUpdate(float deltaTime)
+{
+	(this->*physicsUpdater_)(deltaTime);
 }
 
 void RigidBody2D::Render()
@@ -71,7 +74,7 @@ void RigidBody2D::ImpactUpdate(const float& deltaTime)
 	}
 	else
 	{
-		updater_ = &RigidBody2D::NormalUpdate;
+		physicsUpdater_ = &RigidBody2D::NormalUpdate;
 		velocity_.x = 0;
 	}
 		
@@ -90,7 +93,7 @@ void RigidBody2D::SetMaxVelocity(const float& velX, const float& velY)
 void RigidBody2D::Impact(const vec2f& impactValue)
 {
 	impactVeloctity_ = impactValue;
-	updater_ = &RigidBody2D::ImpactUpdate;
+	physicsUpdater_ = &RigidBody2D::ImpactUpdate;
 }
 
 

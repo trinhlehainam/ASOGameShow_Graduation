@@ -1,5 +1,6 @@
 #include "EntityMng.h"
 
+#include "Time.h"
 #include "../GameObject/Entity.h"
 
 namespace
@@ -54,8 +55,10 @@ const std::vector<std::shared_ptr<Entity>>& EntityMng::GetAllEntities() const
 
 void EntityMng::Update(float deltaTime_s)
 {
+    const auto& time = Time::Instance();
+    
     for (const auto& entity : m_entities)
-        entity->Update(deltaTime_s);
+        entity->Update(entity->m_useFixedFrameRate ? time.FixedDeltaTime_s() : time.DeltaTime_s());
 
     if (m_isRemoveEntities)
     {

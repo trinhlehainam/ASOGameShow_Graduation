@@ -51,9 +51,11 @@ void Application::Impl::Update()
     m_controller->Update();
 
     auto& time = Time::Instance();
-    time.FixedFrameRate();
-    
-    m_scenes.back()->Update(time.DeltaTimeF());
+    time.UpdateTicks();
+
+    // Scenes use system's framerate or FixedDeltaTime
+    // Only each entity uses DeltaTime affected by TimeScale if that entity does not require Fixed Framerate
+    m_scenes.back()->Update(time.FixedDeltaTime_s());
     //
 
     // Change/Move scene
@@ -80,8 +82,8 @@ void Application::Impl::Render()
     // Show FPS
 #ifdef _DEBUG
     auto& time = Time::Instance();
-    DrawFormatString(20, 10, GetColor(255, 255, 255), "FPS : %.f", 1.0f / time.DeltaTimeF());
-    DrawFormatString(20, 30, GetColor(255, 255, 255), "Deltatime_ms : %.2f", time.DeltaTimeF() / MathHelper::kMsToSecond);
+    DrawFormatString(20, 10, GetColor(255, 255, 255), "FPS : %.f", time.FixedDeltaTime_s());
+    DrawFormatString(20, 30, GetColor(255, 255, 255), "Deltatime_ms : %.2f", time.FixedDeltaTime_s() / MathHelper::kMsToSecond);
     _dbgDraw();
 #endif
     ScreenFlip();
@@ -208,6 +210,10 @@ bool Application::Init()
     m_impl->m_scenes.emplace_back(std::make_unique<TitleScene>());
     m_impl->m_scenes.back()->Init();
 
+    // Test Slowmo
+    auto& time = Time::Instance();
+    time.SetTimeScale(0.5f);
+    
     return true;
 }
 
