@@ -117,8 +117,6 @@ bool Animator::Impl::CheckCondition(const AnimatorCondition& condition)
 		return animator.paramMap.at(condition.paramName).value == condition.threshold;
 	case CONDITION_MODE::NOT_EQUAL:
 		return animator.paramMap.at(condition.paramName).value != condition.threshold;
-	default:
-		return false;
 	}
 
 	return false;

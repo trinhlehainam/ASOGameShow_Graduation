@@ -191,6 +191,7 @@
     <ClCompile Include="Source\Scenes\TitleScene.cpp" />
     <ClCompile Include="Source\Scenes\TransitionScene.cpp" />
     <ClCompile Include="Source\Systems\TextureMng.cpp" />
+    <ClCompile Include="Source\Systems\Time.cpp" />
     <ClCompile Include="Source\Utilities\ScopedTimer.cpp" />
     <ClCompile Include="Source\TileMap.cpp" />
     <ClCompile Include="Source\_debug\_DebugConOut.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="Source\Scenes\TitleScene.h" />
     <ClInclude Include="Source\Scenes\TransitionScene.h" />
     <ClInclude Include="Source\Systems\TextureMng.h" />
+    <ClInclude Include="Source\Systems\Time.h" />
     <ClInclude Include="Source\Utilities\dynamic_ring.h" />
     <ClInclude Include="Source\Utilities\ring_iterator.h" />
     <ClInclude Include="Source\Utilities\static_ring.h" />

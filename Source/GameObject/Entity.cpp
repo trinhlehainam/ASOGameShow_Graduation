@@ -7,6 +7,7 @@
 #include "../Component/Collider/BoxCollider.h"
 #include "../Component/Collider/CircleCollider.h"
 #include "../Component/Animation/Animator.h"
+#include "../Input/JoypadXInput.h"
 
 Entity::Entity():m_isActive(true), m_id(-1)
 {
@@ -16,11 +17,11 @@ Entity::Entity(std::string tag) : m_isActive(true), m_tag(std::move(tag)), m_id(
 {
 }
 
-Entity::Entity(const std::shared_ptr<EntityMng>& entityMng):m_isActive(true), m_entityMng(entityMng), m_id(-1)
+Entity::Entity(const std::shared_ptr<EntityMng>& entityMng):m_isActive(true), m_id(-1), m_entityMng(entityMng)
 {
 }
 
-Entity::Entity(const std::shared_ptr<EntityMng>& entityMng, std::string tag):m_isActive(true), m_tag(std::move(tag)), m_entityMng(entityMng), m_id(-1)
+Entity::Entity(const std::shared_ptr<EntityMng>& entityMng, std::string tag):m_isActive(true), m_tag(std::move(tag)), m_id(-1), m_entityMng(entityMng)
 {
 }
 

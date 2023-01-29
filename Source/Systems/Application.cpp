@@ -1,18 +1,18 @@
 #include "Application.h"
 
-#include <chrono>
 #include <deque>
 
 #include <DxLib.h>
 
 #include "Controller.h"
+#include "Time.h"
+#include "../Math/MathHelper.h"
 #include "../_debug/_DebugDispOut.h"
 #include "../Systems/TextureMng.h"
 #include "../Systems/AnimationMng.h"
 #include "../Systems/AnimatorControllerMng.h"
 #include "../Systems/Physics.h"
 #include "../Systems/Renderer.h"
-#include "../Math/MathHelper.h"
 
 #include "../Common.h"
 #include "../Scenes/TitleScene.h"
@@ -33,31 +33,27 @@ public:
     void Update();
     void Render();
 
-    float GetDeltaTime_s();
-
     std::unique_ptr<Controller> m_controller;
     std::deque<std::unique_ptr<IScene>> m_scenes;
-    std::chrono::steady_clock::time_point m_lastTime;
-    float m_deltaTime_s;
 
     bool m_isRunning;
 };
 
 Application::Impl::Impl() :
-    m_controller(std::make_unique<Controller>()),
-    m_lastTime(std::chrono::high_resolution_clock::now()),
-    m_deltaTime_s(0.0f), m_isRunning(true)
+    m_controller(std::make_unique<Controller>()), m_isRunning(true)
 {
 }
 
 void Application::Impl::Update()
 {
     // Update
+
     m_controller->Update();
+
+    auto& time = Time::Instance();
+    time.FixedFrameRate();
     
-    m_deltaTime_s = GetDeltaTime_s();
-    m_lastTime = std::chrono::high_resolution_clock::now();
-    m_scenes.back()->Update(m_deltaTime_s);
+    m_scenes.back()->Update(time.DeltaTimeF());
     //
 
     // Change/Move scene
@@ -83,19 +79,15 @@ void Application::Impl::Render()
         scene->Render();
     // Show FPS
 #ifdef _DEBUG
-    DrawFormatString(20, 10, GetColor(255, 255, 255), "FPS : %.f", 1.0f / m_deltaTime_s);
-    DrawFormatString(20, 30, GetColor(255, 255, 255), "Deltatime_ms : %.2f", m_deltaTime_s / MathHelper::kMsToSecond);
+    auto& time = Time::Instance();
+    DrawFormatString(20, 10, GetColor(255, 255, 255), "FPS : %.f", 1.0f / time.DeltaTimeF());
+    DrawFormatString(20, 30, GetColor(255, 255, 255), "Deltatime_ms : %.2f", time.DeltaTimeF() / MathHelper::kMsToSecond);
     _dbgDraw();
 #endif
     ScreenFlip();
     //
 }
 
-float Application::Impl::GetDeltaTime_s()
-{
-    return std::chrono::duration<float, std::chrono::seconds::period>(
-        std::chrono::high_resolution_clock::now() - m_lastTime).count();
-}
 #pragma endregion
 
 Application& Application::Instance()
@@ -197,6 +189,7 @@ bool Application::Init()
 
     _dbgSetup(kScreenWidth, kScreenHeight, 255);
 
+    Time::Create();
     Renderer::Create();
     Physics::Create();
     TextureMng::Create();
