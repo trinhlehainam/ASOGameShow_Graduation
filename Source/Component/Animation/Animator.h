@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "IAnimNotify.h"
+
 class Animator : public IComponent
 {
 public:
@@ -23,12 +25,9 @@ public:
 	void SetPlayRate(float playRate);
 
 	void Play(const std::string& animatorState);
+	void Notify();
 
-	template<typename T>
-	void BindNotifier(T*, void(T::*)())
-	{
-		
-	}
+	void BindNotify(std::string notifyKey, IAnimNotify* Notifier);
 	
 public:
 	void Init() override;

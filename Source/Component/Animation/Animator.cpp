@@ -31,8 +31,10 @@ private:
     void Play(const std::string& state);
 
     bool CheckCondition(const AnimatorCondition& condition);
+    void BindNotify(std::string notifyKey, IAnimNotify* Notifier);
 private:
     void Update(float deltaTime_s);
+    void Notify();
     void Render();
 
     void UpdateInfinite(float deltaTime_s);
@@ -51,10 +53,13 @@ private:
     friend Animator;
 
     std::weak_ptr<TransformComponent> transform;
+    std::weak_ptr<Animator> animator;
+    std::unordered_map<std::string, IAnimNotify*> notifiersMap;
 
     std::string animatorKey;
-
     std::string currentState;
+    std::string animKey;
+    
     int currentDurationID;
     int currentKeyFrame;
     int timer_ms;
@@ -67,6 +72,7 @@ Animator::Impl::Impl(const std::shared_ptr<Entity>& owner) :
     updateFunc(&Impl::UpdateSleep),
     checkTransFunc(&Impl::Sleep),
     transform(owner->GetComponent<TransformComponent>()),
+    animator(owner->GetComponent<Animator>()),
     currentDurationID(0), currentKeyFrame(0), timer_ms(0), loopCount(0), playRate(1.f), isFlipped(false)
 {
 }
@@ -89,6 +95,7 @@ void Animator::Impl::Play(const std::string& state)
     //
 
     auto& animation = AnimMng.GetAnimation(animatorState.animationList, animatorState.animationState);
+    animKey = AnimMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
     currentDurationID = animation.celBaseId;
     currentKeyFrame = 0;
     timer_ms = AnimMng.GetDuration_ms(currentDurationID) / playRate;
@@ -128,11 +135,26 @@ bool Animator::Impl::CheckCondition(const AnimatorCondition& condition)
     return false;
 }
 
+void Animator::Impl::BindNotify(std::string notifyKey, IAnimNotify* Notifier)
+{
+    assert(Notifier);
+    notifiersMap.emplace(notifyKey, Notifier);
+}
+
 void Animator::Impl::Update(float deltaTime_s)
 {
     (this->*checkTransFunc)();
 
     (this->*updateFunc)(deltaTime_s);
+
+    Notify();
+}
+
+void Animator::Impl::Notify()
+{
+    if (!notifiersMap.count(animKey)) return;
+
+    notifiersMap.at(animKey)->Notify(animator.lock().get());
 }
 
 void Animator::Impl::Render()
@@ -161,8 +183,7 @@ void Animator::Impl::UpdateInfinite(float deltaTime_s)
     const auto& animatorState = animator.stateMap.at(currentState);
     auto& animMng = AnimationMng::Instance();
     const auto& animation = animMng.GetAnimation(animatorState.animationList, animatorState.animationState);
-    const auto animKey = animMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
-    // const auto& notifiersList = animMng.GetNotifiers(animatorState.animationList, animatorState.animationState);
+    animKey = animMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
     
     if (timer_ms <= 0)
     {
@@ -181,6 +202,7 @@ void Animator::Impl::UpdateLoop(float deltaTime_s)
     const auto& animatorState = animator.stateMap.at(currentState);
     auto& animMng = AnimationMng::Instance();
     const auto& animation = animMng.GetAnimation(animatorState.animationList, animatorState.animationState);
+    animKey = animMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
 
     if (timer_ms <= 0)
     {
@@ -330,6 +352,16 @@ void Animator::SetPlayRate(float playRate)
 void Animator::Play(const std::string& animatorState)
 {
     m_impl->Play(animatorState);
+}
+
+void Animator::Notify()
+{
+    m_impl->Notify();
+}
+
+void Animator::BindNotify(std::string notifyKey, IAnimNotify* Notifier)
+{
+   m_impl->BindNotify(notifyKey, Notifier);
 }
 
 void Animator::Init()
