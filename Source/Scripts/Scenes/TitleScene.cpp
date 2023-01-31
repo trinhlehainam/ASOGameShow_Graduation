@@ -3,12 +3,12 @@
 #include <cassert>
 #include <DxLib.h>
 
-#include "../Systems/TextureMng.h"
-#include "../Systems/Application.h"
-#include "../Input/InputID.h"
-#include "../Systems/Controller.h"
+#include "../../Systems/TextureMng.h"
+#include "../../Systems/Application.h"
+#include "../../Input/InputID.h"
+#include "../../Systems/Controller.h"
 
-#include "../Common.h"
+#include "../../Common.h"
 #include "TransitionScene.h"
 #include "GameScene.h"
 

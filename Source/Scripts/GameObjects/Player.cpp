@@ -1,21 +1,21 @@
 #include "Player.h"
 
-#include "../_debug/_DebugDispOut.h"
+#include "../../_debug/_DebugDispOut.h"
 
-#include "Entity.h"
+#include "../../GameObject/Entity.h"
 
-#include "../Systems/TextureMng.h"
-#include "../Systems/Physics.h"
-#include "../Systems/EntityMng.h"
+#include "../../Systems/TextureMng.h"
+#include "../../Systems/Physics.h"
+#include "../../Systems/EntityMng.h"
 
-#include "../Input/KeyboardInput.h"
-#include "../Input/JoypadXInput.h"
-#include "../Input/InputCommand.h"
+#include "../../Input/KeyboardInput.h"
+#include "../../Input/JoypadXInput.h"
+#include "../../Input/InputCommand.h"
 
-#include "../Component/TransformComponent.h"
-#include "../Component/Animation/Animator.h"
-#include "../Component/Collider/RigidBody2D.h"
-#include "../Systems/Time.h"
+#include "../../Component/TransformComponent.h"
+#include "../../Component/Animation/Animator.h"
+#include "../../Component/Collider/RigidBody2D.h"
+#include "../../Systems/Time.h"
 
 namespace
 {

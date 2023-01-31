@@ -24,6 +24,12 @@ public:
 
 	void Play(const std::string& animatorState);
 
+	template<typename T>
+	void BindNotifier(T*, void(T::*)())
+	{
+		
+	}
+	
 public:
 	void Init() override;
 	void Update(float deltaTime_s) override;

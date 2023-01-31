@@ -3,12 +3,12 @@
 #include <assert.h>
 #include <DxLib.h>
 
-#include "../Common.h"
-#include "../Input/KeyboardInput.h"
+#include "../../Common.h"
+#include "../../Input/KeyboardInput.h"
 #include "TitleScene.h"
-#include "../Math/rect.h"
-#include "../Systems/Application.h"
-#include "../Systems/Controller.h"
+#include "../../Math/rect.h"
+#include "../../Systems/Application.h"
+#include "../../Systems/Controller.h"
 // #include "../Scene/KeyConfigScene.h"
 
 namespace

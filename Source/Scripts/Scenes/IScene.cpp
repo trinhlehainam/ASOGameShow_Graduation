@@ -4,7 +4,7 @@
 
 #include <DxLib.h>
 
-#include "../Systems/EntityMng.h"
+#include "../../Systems/EntityMng.h"
 
 IScene::IScene() :
 	IsChangeSceneRequested(false),

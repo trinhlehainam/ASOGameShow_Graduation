@@ -4,18 +4,16 @@
 #include <rapidxml.hpp>
 
 #include "MenuScene.h"
-#include "../Systems/Renderer.h"
-#include "../Systems/Physics.h"
-#include "../Systems/AnimationMng.h"
-#include "../Systems/AnimatorControllerMng.h"
-#include "../Systems/EntityMng.h"
-#include "../TileMap.h"
-#include "../Input/IInput.h"
-#include "../GameObject/Player.h"
-#include "../GameObject/Entity.h"
-#include "../Systems/Application.h"
-#include "../Systems/Controller.h"
-#include "../Systems/Time.h"
+#include "../../Systems/Renderer.h"
+#include "../../Systems/Physics.h"
+#include "../../Systems/EntityMng.h"
+#include "../../TileMap.h"
+#include "../../Input/IInput.h"
+#include "../GameObjects/Player.h"
+#include "../../GameObject/Entity.h"
+#include "../../Systems/Application.h"
+#include "../../Systems/Controller.h"
+#include "../../Systems/Time.h"
 
 namespace
 {

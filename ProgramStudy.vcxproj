@@ -156,11 +156,91 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Component\Animation\AnimatorController.cpp" />
+    <ClCompile Include="Source\Component\Animation\IAnimNotify.cpp" />
     <ClCompile Include="Source\Component\Collider\RigidBody2D.cpp" />
     <ClCompile Include="Source\Component\HealthComponent.cpp" />
     <ClCompile Include="Source\Math\Geometry\Box.cpp" />
     <ClCompile Include="Source\Math\rect.cpp" />
-    <ClCompile Include="Source\Scenes\MenuScene.cpp" />
+    <ClCompile Include="Source\Scripts\GameObjects\Player.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
+      <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>x64\Debug\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>x64\Debug\ProgramStudy.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>x64\Debug\ProgramStudy.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_MBCS;</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\Dependencies\rapidxml-1.13;</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>D:\Dependencies\rapidxml-1.13;</AdditionalUsingDirectories>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
+    <ClCompile Include="Source\Scripts\Scenes\GameScene.cpp" />
+    <ClCompile Include="Source\Scripts\Scenes\IScene.cpp" />
+    <ClCompile Include="Source\Scripts\Scenes\MenuScene.cpp" />
+    <ClCompile Include="Source\Scripts\Scenes\TitleScene.cpp" />
+    <ClCompile Include="Source\Scripts\Scenes\TransitionScene.cpp" />
     <ClCompile Include="Source\Systems\AnimatorControllerMng.cpp" />
     <ClCompile Include="Source\Component\Animation\AnimationTransition.cpp" />
     <ClCompile Include="Source\Input\InputCommand.cpp" />
@@ -173,7 +253,6 @@
     <ClCompile Include="Source\Component\Collider\BoxCollider.cpp" />
     <ClCompile Include="Source\Component\Collider\ICollider.cpp" />
     <ClCompile Include="Source\Systems\AnimationMng.cpp" />
-    <ClCompile Include="Source\GameObject\Player.cpp" />
     <ClCompile Include="Source\Component\IComponent.cpp" />
     <ClCompile Include="Source\Input\KeyboardInput.cpp" />
     <ClCompile Include="Source\Input\JoypadXInput.cpp" />
@@ -181,15 +260,11 @@
     <ClCompile Include="Source\Math\Geometry\Circle.cpp" />
     <ClCompile Include="Source\Math\Geometry\Triangle.cpp" />
     <ClCompile Include="Source\Input\IInput.cpp" />
-    <ClCompile Include="Source\Scenes\GameScene.cpp" />
-    <ClCompile Include="Source\Scenes\IScene.cpp" />
     <ClCompile Include="Source\Math\line2.cpp" />
     <ClCompile Include="Source\Math\segment2.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Math\MathHelper.cpp" />
     <ClCompile Include="Source\Math\vec2.cpp" />
-    <ClCompile Include="Source\Scenes\TitleScene.cpp" />
-    <ClCompile Include="Source\Scenes\TransitionScene.cpp" />
     <ClCompile Include="Source\Systems\TextureMng.cpp" />
     <ClCompile Include="Source\Systems\Time.cpp" />
     <ClCompile Include="Source\Utilities\ScopedTimer.cpp" />
@@ -206,11 +281,17 @@
     <ClInclude Include="Source\Common.h" />
     <ClInclude Include="Source\Component\Animation\AnimatorController.h" />
     <ClInclude Include="Source\Component\Animation\AnimatorParameter.h" />
+    <ClInclude Include="Source\Component\Animation\IAnimNotify.h" />
     <ClInclude Include="Source\Component\Collider\RigidBody2D.h" />
     <ClInclude Include="Source\Component\HealthComponent.h" />
     <ClInclude Include="Source\Math\HitInfo.h" />
     <ClInclude Include="Source\Math\rect.h" />
-    <ClInclude Include="Source\Scenes\MenuScene.h" />
+    <ClInclude Include="Source\Scripts\GameObjects\Player.h" />
+    <ClInclude Include="Source\Scripts\Scenes\GameScene.h" />
+    <ClInclude Include="Source\Scripts\Scenes\IScene.h" />
+    <ClInclude Include="Source\Scripts\Scenes\MenuScene.h" />
+    <ClInclude Include="Source\Scripts\Scenes\TitleScene.h" />
+    <ClInclude Include="Source\Scripts\Scenes\TransitionScene.h" />
     <ClInclude Include="Source\Systems\AnimatorControllerMng.h" />
     <ClInclude Include="Source\Component\Animation\AnimationTransition.h" />
     <ClInclude Include="Source\Component\Animation\ConditionMode.h" />
@@ -225,7 +306,6 @@
     <ClInclude Include="Source\Component\Collider\BoxCollider.h" />
     <ClInclude Include="Source\Component\Collider\ICollider.h" />
     <ClInclude Include="Source\Systems\AnimationMng.h" />
-    <ClInclude Include="Source\GameObject\Player.h" />
     <ClInclude Include="Source\Component\IComponent.h" />
     <ClInclude Include="Source\Input\KeyboardInput.h" />
     <ClInclude Include="Source\Input\JoypadXInput.h" />
@@ -235,15 +315,11 @@
     <ClInclude Include="Source\Math\Geometry\Triangle.h" />
     <ClInclude Include="Source\Input\IInput.h" />
     <ClInclude Include="Source\Input\InputID.h" />
-    <ClInclude Include="Source\Scenes\GameScene.h" />
     <ClInclude Include="Source\Systems\Application.h" />
-    <ClInclude Include="Source\Scenes\IScene.h" />
     <ClInclude Include="Source\Math\line2.h" />
     <ClInclude Include="Source\Math\segment2.h" />
     <ClInclude Include="Source\Math\MathHelper.h" />
     <ClInclude Include="Source\Math\vec2.h" />
-    <ClInclude Include="Source\Scenes\TitleScene.h" />
-    <ClInclude Include="Source\Scenes\TransitionScene.h" />
     <ClInclude Include="Source\Systems\TextureMng.h" />
     <ClInclude Include="Source\Systems\Time.h" />
     <ClInclude Include="Source\Utilities\dynamic_ring.h" />

@@ -15,8 +15,8 @@
 #include "../Systems/Renderer.h"
 
 #include "../Common.h"
-#include "../Scenes/TitleScene.h"
-#include "../Scenes/GameScene.h"
+#include "../Scripts/Scenes/TitleScene.h"
+#include "../Scripts/Scenes/GameScene.h"
 
 namespace
 {

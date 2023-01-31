@@ -5,5 +5,9 @@
         <duration encoding="csv">
             100,100,100,100,100
         </duration>
+        <notifierList>
+            <notifier name="attackBegin" keyframe="2" />
+            <notifier name="attackEnd" keyframe="4" />
+        </notifierList>
     </animation>
 </animationGroup>

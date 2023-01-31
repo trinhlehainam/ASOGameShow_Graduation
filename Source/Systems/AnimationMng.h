@@ -14,7 +14,14 @@ struct Animation
     int loop;
 };
 
-// Singeton
+struct Notifier
+{
+    const char* name;
+
+    int keyframe;
+};
+
+// Singleton
 class AnimationMng
 {
 public:
@@ -28,7 +35,10 @@ public:
     static bool HasAnimationList(const std::string& listKey);
     static bool HasAnimation(const std::string& listKey, const std::string& state);
     static const Animation& GetAnimation(const std::string& listKey, const std::string& state);
+    static std::string GetAnimationKey(const std::string& listKey, const std::string& state);
     static int GetDuration_ms(int durationIndex);
+    static bool HasNotifiers(const std::string& listKey, const std::string& state);
+    static const std::vector<Notifier>& GetNotifiers(const std::string& listKey, const std::string& state);
 private:
     AnimationMng();
     ~AnimationMng();
@@ -42,6 +52,7 @@ private:
 
 private:
     std::unordered_map<std::string, AnimationMap_t> m_listMap;
+    std::unordered_map<std::string, std::vector<Notifier>> m_notifiersMap;
     std::vector<int> m_durations_ms;
     static AnimationMng* m_instance;
 };

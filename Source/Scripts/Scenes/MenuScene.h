@@ -4,7 +4,7 @@
 #include <functional>
 #include <vector>
 
-#include "../Math/vec2.h"
+#include "../../Math/vec2.h"
 
 class MenuScene: public IScene
 {

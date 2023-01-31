@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "../Input/IInput.h"
+#include "../../Input/IInput.h"
 
 class Entity;
 class EntityMng;
