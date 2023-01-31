@@ -82,7 +82,7 @@ void Application::Impl::Render()
     // Show FPS
 #ifdef _DEBUG
     auto& time = Time::Instance();
-    DrawFormatString(20, 10, GetColor(255, 255, 255), "FPS : %.f", time.FixedDeltaTime_s());
+    DrawFormatString(20, 10, GetColor(255, 255, 255), "FPS : %.1f", 1.f / time.FixedDeltaTime_s());
     DrawFormatString(20, 30, GetColor(255, 255, 255), "Deltatime_ms : %.2f", time.FixedDeltaTime_s() / MathHelper::kMsToSecond);
     _dbgDraw();
 #endif

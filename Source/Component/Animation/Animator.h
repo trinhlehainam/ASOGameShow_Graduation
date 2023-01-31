@@ -20,6 +20,7 @@ public:
 	int GetInteger(const std::string& name);
 
 	void SetFlip(bool isFlipped);
+	void SetPlayRate(float playRate);
 
 	void Play(const std::string& animatorState);
 

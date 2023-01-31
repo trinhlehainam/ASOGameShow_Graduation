@@ -58,6 +58,7 @@ private:
 	int currentDurationID;
 	int timer_ms;
 	int loopCount;
+	float playRate;
 	bool isFlipped;
 };
 
@@ -65,7 +66,7 @@ Animator::Impl::Impl(const std::shared_ptr<Entity>& owner) :
 	updateFunc(&Impl::UpdateSleep),
 	checkTransFunc(&Impl::Sleep),
 	transform(owner->GetComponent<TransformComponent>()), 
-	currentDurationID(0), timer_ms(0), loopCount(0), isFlipped(false)
+	currentDurationID(0), timer_ms(0), loopCount(0), playRate(1.f), isFlipped(false)
 	{}
 Animator::Impl::~Impl() { }
 
@@ -84,7 +85,7 @@ void Animator::Impl::Play(const std::string& state)
 
 	auto& animation = AnimMng.GetAnimation(animatorState.animationList, animatorState.animationState);
 	currentDurationID = animation.celBaseId;
-	timer_ms = AnimMng.GetDuration_ms(currentDurationID);
+	timer_ms = AnimMng.GetDuration_ms(currentDurationID) / playRate;
 
 	switch (animation.loop)
 	{
@@ -158,7 +159,7 @@ void Animator::Impl::UpdateInfinite(float deltaTime_s)
 		auto& animMng = AnimationMng::Instance();
 		const auto& animation = animMng.GetAnimation(animatorState.animationList, animatorState.animationState);
 		currentDurationID = (currentDurationID - animation.celBaseId + 1) % animation.celCount + animation.celBaseId;
-		timer_ms = animMng.GetDuration_ms(currentDurationID);
+		timer_ms = animMng.GetDuration_ms(currentDurationID) / playRate;
 	}
 
 	timer_ms -= static_cast<int>(deltaTime_s / MathHelper::kMsToSecond);
@@ -175,14 +176,14 @@ void Animator::Impl::UpdateLoop(float deltaTime_s)
 	if (timer_ms <= 0)
 	{
 		++currentDurationID;
-		timer_ms = animMng.GetDuration_ms(currentDurationID);
+		timer_ms = animMng.GetDuration_ms(currentDurationID) / playRate;
 	}
 
 	if (currentDurationID >= (animation.celBaseId + animation.celCount))
 	{
 		--loopCount;
 		currentDurationID = animation.celBaseId;
-		timer_ms = animMng.GetDuration_ms(currentDurationID);
+		timer_ms = animMng.GetDuration_ms(currentDurationID) / playRate;
 	}
 
 	if (loopCount < 0)
@@ -301,6 +302,12 @@ int Animator::GetInteger(const std::string& name)
 void Animator::SetFlip(bool isFlipped)
 {
 	m_impl->isFlipped = isFlipped;
+}
+
+void Animator::SetPlayRate(float playRate)
+{
+	assert(playRate != 0.f);
+	m_impl->playRate = playRate;
 }
 
 void Animator::Play(const std::string& animatorState)
