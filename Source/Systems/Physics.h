@@ -24,9 +24,9 @@ public:
     static Physics& Instance();
 public:
     static void AddCollider(const std::shared_ptr<ICollider>& collider);
-    static void ApplyForce(float DeltaTime);
-    static void Update(float DeltaTime);
-    static void PlatformResolution(float DeltaTime);
+    static void ApplyForce();
+    static void Update();
+    static void PlatformResolution();
     static void Render();
     static void RemoveColliders();
     static void ClearData();

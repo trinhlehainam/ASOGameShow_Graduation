@@ -19,8 +19,8 @@ RigidBody2D::RigidBody2D(const std::shared_ptr<Entity>& owner,
 
 void RigidBody2D::NormalUpdate(const float& deltaTime)
 {
-	velocity_.x = MathHelper::clamp(velocity_.x, -maxVelocity_.x, maxVelocity_.x);
-	velocity_.y = MathHelper::clamp(velocity_.y, -maxVelocity_.y, maxVelocity_.y);
+	m_velocity.x = MathHelper::clamp(m_velocity.x, -maxVelocity_.x, maxVelocity_.x);
+	m_velocity.y = MathHelper::clamp(m_velocity.y, -maxVelocity_.y, maxVelocity_.y);
 }
 
 void RigidBody2D::Update(float deltaTime)
@@ -31,7 +31,7 @@ void RigidBody2D::Update(float deltaTime)
 	auto transform = m_owner.lock()->GetComponent<TransformComponent>();
 
 	// collider_.pos = transform->GetLimitPosition(collider_.pos);
-	m_collider.pos += velocity_ * deltaTime;
+	m_collider.pos += (m_velocity + m_impactVeloctity)  * deltaTime;
 	transform->Pos.x = m_collider.pos.x + m_offset.x ;
 	transform->Pos.y = m_collider.pos.y + m_offset.y ;
 }
@@ -57,25 +57,23 @@ COLLIDER_TYPE RigidBody2D::ColliderType()
 
 void RigidBody2D::ImpactUpdate(const float& deltaTime)
 {
-	m_collider.pos.x += impactVeloctity_.x * deltaTime;
-	m_collider.pos.y += velocity_.y * deltaTime;
-	if (impactVeloctity_.x < 0)
+	if (m_impactVeloctity.x < 0)
 	{
-		impactVeloctity_.x += impactResist_.x * deltaTime;
-		if (impactVeloctity_.x >= 0)
-			impactVeloctity_.x = 0;
+		m_impactVeloctity.x += impactResist_.x * deltaTime;
+		if (m_impactVeloctity.x >= 0)
+			m_impactVeloctity.x = 0;
 
 	}
-	else if (impactVeloctity_.x > 0)
+	else if (m_impactVeloctity.x > 0)
 	{
-		impactVeloctity_.x -= impactResist_.x * deltaTime;
-		if (impactVeloctity_.x <= 0)
-			impactVeloctity_.x = 0;
+		m_impactVeloctity.x -= impactResist_.x * deltaTime;
+		if (m_impactVeloctity.x <= 0)
+			m_impactVeloctity.x = 0;
 	}
 	else
 	{
 		physicsUpdater_ = &RigidBody2D::NormalUpdate;
-		velocity_.x = 0;
+		m_velocity.x = 0;
 	}
 		
 }
@@ -92,7 +90,7 @@ void RigidBody2D::SetMaxVelocity(const float& velX, const float& velY)
 
 void RigidBody2D::Impact(const vec2f& impactValue)
 {
-	impactVeloctity_ = impactValue;
+	m_impactVeloctity = impactValue;
 	physicsUpdater_ = &RigidBody2D::ImpactUpdate;
 }
 

@@ -26,11 +26,11 @@ private:
     void ImpactUpdate(const float&);
 
     vec2f impactResist_ = vec2f(1000,1000);
-    vec2f impactVeloctity_ = vec2f(0, 0);
+    vec2f m_impactVeloctity = vec2f(0, 0);
 public:
     rectf m_collider;
     rectf destRect_;
-    vec2f velocity_ = vec2f(0, 0);
+    vec2f m_velocity = vec2f(0, 0);
     vec2f m_offset;
 	
     void Init() override;

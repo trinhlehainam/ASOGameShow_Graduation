@@ -73,7 +73,7 @@ void Player::Update(float deltaTime_s)
 {
     m_input->Update();
     m_inputCommand->Update();
-    auto speed = vec2f{0.0f, m_body->velocity_.y};
+    auto speed = vec2f{0.0f, m_body->m_velocity.y};
 
     const auto& transform = m_entity->GetComponent<TransformComponent>();
     auto animator = m_entity->GetComponent<Animator>();
@@ -93,7 +93,7 @@ void Player::Update(float deltaTime_s)
         isJumpRequested = true;
 
 
-    animator->SetFloat("speed", m_body->velocity_.x);
+    animator->SetFloat("speed", m_body->m_velocity.x);
 
     animator->SetBool("isAttack", m_input->IsPressed(INPUT_ID::BTN1));
 
@@ -111,7 +111,7 @@ void Player::Update(float deltaTime_s)
     isJumpRequested = false;
 
     const auto& time = Time::Instance();
-    m_body->velocity_ = speed;
+    m_body->m_velocity = speed;
 }
 
 void Player::Render()

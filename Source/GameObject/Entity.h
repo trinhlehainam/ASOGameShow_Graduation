@@ -26,6 +26,7 @@ public:
     std::string GetTag() const;
     int GetEntityID() const;
     bool IsActive() const;
+    bool UseFixedFrameRate() const;
 
     void Update(float deltaTime_s);
     void Render();

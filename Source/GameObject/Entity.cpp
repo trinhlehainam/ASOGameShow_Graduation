@@ -63,6 +63,11 @@ bool Entity::IsActive() const
 	return m_isActive;
 }
 
+bool Entity::UseFixedFrameRate() const
+{
+	return m_useFixedFrameRate;
+}
+
 void Entity::Update(float deltaTime_s)
 {
 	for (const auto& component : m_components)

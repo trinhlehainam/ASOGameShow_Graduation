@@ -75,14 +75,14 @@ void GameScene::Update(float deltaTime_s)
 	m_player->Update(deltaTime_s);
 	
 	// Apply Physics Force and Momentum
-	Physics::ApplyForce(time.DeltaTime_s());
+	Physics::ApplyForce();
 	
 	// Update all Entities Components
-	m_entityMng->Update(deltaTime_s);
+	m_entityMng->Update(time.DeltaTime_s());
 	
 	// Physics Collision and Resolution
-	Physics::PlatformResolution(deltaTime_s);
-	Physics::Update(deltaTime_s);
+	Physics::PlatformResolution();
+	Physics::Update();
 }
 
 void GameScene::Render()

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <DxLib.h>
 
+#include "Time.h"
 #include "../Utilities/MacroHelper.h"
 
 #include "../Math/MathHelper.h"
@@ -12,6 +13,7 @@
 
 #include "../Component/Collider/BoxCollider.h"
 #include "../Component/Collider/CircleCollider.h"
+#include "../GameObject/Entity.h"
 #include "../Math/HitInfo.h"
 
 GenerateDynamicSingleton(Physics);
@@ -47,17 +49,17 @@ bool Physics::RayCast(const vec2f& origin, const vec2f& dir, float maxDistance)
         auto pCollider_checked = pCollider;
         auto collider_type = pCollider_checked->ColliderType();
         if (collider_type == COLLIDER_TYPE::BOX)
-            {
-                auto boxCollider = std::dynamic_pointer_cast<BoxCollider>(pCollider_checked);
-                if (MathHelper::isOverlap(seg, boxCollider->GetCollider()))
-                    return true;
-            }
-        else if (collider_type ==  COLLIDER_TYPE::CIRCLE)
-            {
-                auto cirCollider = std::dynamic_pointer_cast<CircleCollider>(pCollider_checked);
-                if (MathHelper::isOverlap(seg, cirCollider->GetCollider()))
-                    return true;
-            }
+        {
+            auto boxCollider = std::dynamic_pointer_cast<BoxCollider>(pCollider_checked);
+            if (MathHelper::isOverlap(seg, boxCollider->GetCollider()))
+                return true;
+        }
+        else if (collider_type == COLLIDER_TYPE::CIRCLE)
+        {
+            auto cirCollider = std::dynamic_pointer_cast<CircleCollider>(pCollider_checked);
+            if (MathHelper::isOverlap(seg, cirCollider->GetCollider()))
+                return true;
+        }
     }
     return false;
 }
@@ -115,32 +117,40 @@ void Physics::AddCollider(const std::shared_ptr<ICollider>& collider)
     m_instance->m_colliders.push_back(collider);
 }
 
-void Physics::ApplyForce(float DeltaTime)
+void Physics::ApplyForce()
 {
-    for (auto& actorBody : m_instance->m_actorBodies)
-        actorBody->velocity_.y += 1500.f * DeltaTime;
+    const auto& time = Time::Instance();
 
     for (auto& actorBody : m_instance->m_actorBodies)
     {
-        actorBody->PhysicsUpdate(DeltaTime);
+        const float DeltaTime_s = actorBody->m_owner.lock()->UseFixedFrameRate() ? time.FixedDeltaTime_s() : time.DeltaTime_s();
+        actorBody->m_velocity.y += 1500.f * DeltaTime_s;
+        actorBody->PhysicsUpdate(DeltaTime_s);
     }
+
 }
 
-void Physics::Update(float DeltaTime)
+void Physics::Update()
 {
+    const auto& time = Time::Instance();
+
     for (auto& collider : m_instance->m_colliders)
-        collider->Update(DeltaTime);
+        collider->Update(time.DeltaTime_s());
 
     for (auto& actorBody : m_instance->m_actorBodies)
-        actorBody->Update(DeltaTime);
+        actorBody->Update(time.DeltaTime_s());
 
     RemoveColliders();
 }
 
-void Physics::PlatformResolution(float deltaTime)
+void Physics::PlatformResolution()
 {
     for (auto& actor : m_instance->m_actorBodies)
     {
+        const auto& time = Time::Instance();
+        const float deltaTime = actor->m_owner.lock()->UseFixedFrameRate()
+                                    ? time.FixedDeltaTime_s()
+                                    : time.DeltaTime_s();
         for (auto& target : m_instance->m_colliders)
         {
             HitInfo HitInfo;
@@ -148,13 +158,13 @@ void Physics::PlatformResolution(float deltaTime)
             {
                 auto terrain = dynamic_cast<BoxCollider*>(target.get());
                 if (!terrain) continue;
-                if (CheckSweptAABB(HitInfo, actor->m_collider, actor->velocity_, terrain->GetCollider(), deltaTime))
+                if (CheckSweptAABB(HitInfo, actor->m_collider, actor->m_velocity, terrain->GetCollider(), deltaTime))
                 {
-                    float offset = (actor->velocity_.y) / 100.f + 2.f;
+                    float offset = (actor->m_velocity.y) / 100.f + 2.f;
 
                     if (HitInfo.Normal.x != 0.f)
                     {
-                        actor->velocity_.x = 0;
+                        actor->m_velocity.x = 0;
                         if (actor->m_collider.Right() <= terrain->GetCollider().Left() && HitInfo.Normal.x > 0.f)
                             actor->m_collider.pos.x = terrain->GetCollider().Left() - actor->m_collider.w;
                         if (actor->m_collider.Left() >= terrain->GetCollider().Right() && HitInfo.Normal.x < 0.f)
@@ -165,25 +175,25 @@ void Physics::PlatformResolution(float deltaTime)
                         if (actor->m_collider.Top() >= terrain->GetCollider().Bottom() && HitInfo.Normal.y > 0.f)
                         {
                             actor->m_collider.pos.y = terrain->GetCollider().Bottom();
-                            if (actor->velocity_.y < 0.f)
-                                actor->velocity_.y = 0.f;
+                            if (actor->m_velocity.y < 0.f)
+                                actor->m_velocity.y = 0.f;
                         }
 
                         if (actor->m_collider.Bottom() <= terrain->GetCollider().Top() && HitInfo.Normal.y < 0.f)
                         {
                             actor->m_collider.pos.y = terrain->GetCollider().Top() - actor->m_collider.h;
-                            if (actor->velocity_.y > 0.f)
-                                actor->velocity_.y = 0.f;
+                            if (actor->m_velocity.y > 0.f)
+                                actor->m_velocity.y = 0.f;
                         }
                     }
                 }
 
-                if (CheckSweptAABB(HitInfo, actor->m_collider, actor->impactVeloctity_, terrain->GetCollider(),
+                if (CheckSweptAABB(HitInfo, actor->m_collider, actor->m_impactVeloctity, terrain->GetCollider(),
                                    deltaTime))
                 {
                     if (actor->m_collider.Bottom() > terrain->GetCollider().Top())
                     {
-                        actor->impactVeloctity_.x = 0;
+                        actor->m_impactVeloctity.x = 0;
                     }
                 }
             }
