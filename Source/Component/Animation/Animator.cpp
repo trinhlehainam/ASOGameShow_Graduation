@@ -13,13 +13,6 @@
 #include "../../GameObject/Entity.h"
 
 
-namespace
-{
-    constexpr float kDefaultFloat = 0.0f;
-    constexpr bool kDefaultBool = false;
-    constexpr int kDefaultInt = 0;
-}
-
 #pragma region Pimpl
 class Animator::Impl
 {
@@ -31,7 +24,7 @@ private:
     void Play(const std::string& state);
 
     bool CheckCondition(const AnimatorCondition& condition);
-    void BindNotify(std::string notifyKey, IAnimNotify* Notifier);
+    void BindNotify(const std::string& stateKey, const std::string& notifyKey, IAnimNotify* Notifier);
 private:
     void Update(float deltaTime_s);
     void Notify();
@@ -58,10 +51,11 @@ private:
 
     std::string animatorKey;
     std::string currentState;
-    std::string animKey;
-    
+    std::string currentAnimKey;
+
     int currentDurationID;
     int currentKeyFrame;
+    int notifyKeyFrame;
     int timer_ms;
     int loopCount;
     float playRate;
@@ -73,7 +67,8 @@ Animator::Impl::Impl(const std::shared_ptr<Entity>& owner) :
     checkTransFunc(&Impl::Sleep),
     transform(owner->GetComponent<TransformComponent>()),
     animator(owner->GetComponent<Animator>()),
-    currentDurationID(0), currentKeyFrame(0), timer_ms(0), loopCount(0), playRate(1.f), isFlipped(false)
+    currentDurationID(0), currentKeyFrame(0), notifyKeyFrame(0), timer_ms(0), loopCount(0), playRate(1.f),
+    isFlipped(false)
 {
 }
 
@@ -95,7 +90,7 @@ void Animator::Impl::Play(const std::string& state)
     //
 
     auto& animation = AnimMng.GetAnimation(animatorState.animationList, animatorState.animationState);
-    animKey = AnimMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
+    currentAnimKey = AnimMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
     currentDurationID = animation.celBaseId;
     currentKeyFrame = 0;
     timer_ms = AnimMng.GetDuration_ms(currentDurationID) / playRate;
@@ -135,9 +130,24 @@ bool Animator::Impl::CheckCondition(const AnimatorCondition& condition)
     return false;
 }
 
-void Animator::Impl::BindNotify(std::string notifyKey, IAnimNotify* Notifier)
+void Animator::Impl::BindNotify(const std::string& stateKey, const std::string& notifyKey, IAnimNotify* Notifier)
 {
     assert(Notifier);
+    if (!AnimatorControllerMng::Has(animatorKey)) return;
+    const auto& animatorController = AnimatorControllerMng::Get(animatorKey);
+    const auto& animatorState = animatorController.stateMap.at(stateKey);
+    auto& animMng = AnimationMng::Instance();
+    const auto& notifiers = animMng.GetNotifiers(animatorState.animationList, animatorState.animationState);
+
+    for (const auto& notify : notifiers)
+    {
+        if (strcmp(notify.name, notifyKey.c_str()) == 0)
+        {
+            notifiersMap.emplace(notifyKey, Notifier);
+            notifyKeyFrame = notify.keyframe;
+        }
+    }
+
     notifiersMap.emplace(notifyKey, Notifier);
 }
 
@@ -152,9 +162,9 @@ void Animator::Impl::Update(float deltaTime_s)
 
 void Animator::Impl::Notify()
 {
-    if (!notifiersMap.count(animKey)) return;
+    if (!notifiersMap.count(currentAnimKey)) return;
 
-    notifiersMap.at(animKey)->Notify(animator.lock().get());
+    notifiersMap.at(currentAnimKey)->Notify(animator.lock().get());
 }
 
 void Animator::Impl::Render()
@@ -179,12 +189,12 @@ void Animator::Impl::Render()
 void Animator::Impl::UpdateInfinite(float deltaTime_s)
 {
     if (!AnimatorControllerMng::Has(animatorKey)) return;
-    const auto& animator = AnimatorControllerMng::Get(animatorKey);
-    const auto& animatorState = animator.stateMap.at(currentState);
+    const auto& animatorController = AnimatorControllerMng::Get(animatorKey);
+    const auto& animatorState = animatorController.stateMap.at(currentState);
     auto& animMng = AnimationMng::Instance();
     const auto& animation = animMng.GetAnimation(animatorState.animationList, animatorState.animationState);
-    animKey = animMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
-    
+    currentAnimKey = animMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
+
     if (timer_ms <= 0)
     {
         currentDurationID = (currentDurationID - animation.celBaseId + 1) % animation.celCount + animation.celBaseId;
@@ -198,11 +208,11 @@ void Animator::Impl::UpdateInfinite(float deltaTime_s)
 void Animator::Impl::UpdateLoop(float deltaTime_s)
 {
     if (!AnimatorControllerMng::Has(animatorKey)) return;
-    const auto& animator = AnimatorControllerMng::Get(animatorKey);
-    const auto& animatorState = animator.stateMap.at(currentState);
+    const auto& animatorController = AnimatorControllerMng::Get(animatorKey);
+    const auto& animatorState = animatorController.stateMap.at(currentState);
     auto& animMng = AnimationMng::Instance();
     const auto& animation = animMng.GetAnimation(animatorState.animationList, animatorState.animationState);
-    animKey = animMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
+    currentAnimKey = animMng.GetAnimationKey(animatorState.animationList, animatorState.animationState);
 
     if (timer_ms <= 0)
     {
@@ -235,9 +245,9 @@ void Animator::Impl::UpdateSleep(float deltaTime_s)
 void Animator::Impl::ActiveCheckTransition()
 {
     if (!AnimatorControllerMng::Has(animatorKey)) return;
-    const auto& animator = AnimatorControllerMng::Get(animatorKey);
+    const auto& animatorController = AnimatorControllerMng::Get(animatorKey);
     // Check conditions
-    const auto& state = animator.stateMap.at(currentState);
+    const auto& state = animatorController.stateMap.at(currentState);
     for (const auto& transition : state.transitions)
     {
         bool checkFlag = true;
@@ -281,10 +291,10 @@ void Animator::AddAnimatorController(const std::string& key)
 void Animator::SetFloat(const std::string& name, float value)
 {
     assert(AnimatorControllerMng::Has(m_impl->animatorKey));
-    auto& animator = AnimatorControllerMng::Get(m_impl->animatorKey);
-    assert(animator.HasParameter(name));
-    assert(animator.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::FLOAT);
-    animator.paramMap.at(name).value = value;
+    auto& animatorController = AnimatorControllerMng::Get(m_impl->animatorKey);
+    assert(animatorController.HasParameter(name));
+    assert(animatorController.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::FLOAT);
+    animatorController.paramMap.at(name).value = value;
 
     m_impl->checkTransFunc = &Impl::ActiveCheckTransition;
 }
@@ -292,10 +302,10 @@ void Animator::SetFloat(const std::string& name, float value)
 void Animator::SetBool(const std::string& name, bool flag)
 {
     assert(AnimatorControllerMng::Has(m_impl->animatorKey));
-    auto& animator = AnimatorControllerMng::Get(m_impl->animatorKey);
-    assert(animator.HasParameter(name));
-    assert(animator.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::BOOL);
-    animator.paramMap.at(name).value = static_cast<float>(flag);
+    auto& animatorController = AnimatorControllerMng::Get(m_impl->animatorKey);
+    assert(animatorController.HasParameter(name));
+    assert(animatorController.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::BOOL);
+    animatorController.paramMap.at(name).value = static_cast<float>(flag);
 
     m_impl->checkTransFunc = &Impl::ActiveCheckTransition;
 }
@@ -303,10 +313,10 @@ void Animator::SetBool(const std::string& name, bool flag)
 void Animator::SetInteger(const std::string& name, int value)
 {
     assert(AnimatorControllerMng::Has(m_impl->animatorKey));
-    auto& animator = AnimatorControllerMng::Get(m_impl->animatorKey);
-    assert(animator.HasParameter(name));
-    assert(animator.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::INTEGER);
-    animator.paramMap.at(name).value = static_cast<float>(value);
+    auto& animatorController = AnimatorControllerMng::Get(m_impl->animatorKey);
+    assert(animatorController.HasParameter(name));
+    assert(animatorController.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::INTEGER);
+    animatorController.paramMap.at(name).value = static_cast<float>(value);
 
     m_impl->checkTransFunc = &Impl::ActiveCheckTransition;
 }
@@ -314,28 +324,28 @@ void Animator::SetInteger(const std::string& name, int value)
 float Animator::GetFloat(const std::string& name)
 {
     assert(AnimatorControllerMng::Has(m_impl->animatorKey));
-    const auto& animator = AnimatorControllerMng::Get(m_impl->animatorKey);
-    assert(animator.HasParameter(name));
-    assert(animator.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::FLOAT);
-    return animator.paramMap.at(name).value;
+    const auto& animatorController = AnimatorControllerMng::Get(m_impl->animatorKey);
+    assert(animatorController.HasParameter(name));
+    assert(animatorController.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::FLOAT);
+    return animatorController.paramMap.at(name).value;
 }
 
 bool Animator::GetBool(const std::string& name)
 {
     assert(AnimatorControllerMng::Has(m_impl->animatorKey));
-    const auto& animator = AnimatorControllerMng::Get(m_impl->animatorKey);
-    assert(animator.HasParameter(name));
-    assert(animator.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::BOOL);
-    return static_cast<bool>(animator.paramMap.at(name).value);
+    const auto& animatorController = AnimatorControllerMng::Get(m_impl->animatorKey);
+    assert(animatorController.HasParameter(name));
+    assert(animatorController.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::BOOL);
+    return static_cast<bool>(animatorController.paramMap.at(name).value);
 }
 
 int Animator::GetInteger(const std::string& name)
 {
     assert(AnimatorControllerMng::Has(m_impl->animatorKey));
-    const auto& animator = AnimatorControllerMng::Get(m_impl->animatorKey);
-    assert(animator.HasParameter(name));
-    assert(animator.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::INTEGER);
-    return static_cast<int>(animator.paramMap.at(name).value);
+    const auto& animatorController = AnimatorControllerMng::Get(m_impl->animatorKey);
+    assert(animatorController.HasParameter(name));
+    assert(animatorController.paramMap.at(name).type == ANIMATOR_PARAMETER_TYPE::INTEGER);
+    return static_cast<int>(animatorController.paramMap.at(name).value);
 }
 
 void Animator::SetFlip(bool isFlipped)
@@ -359,9 +369,9 @@ void Animator::Notify()
     m_impl->Notify();
 }
 
-void Animator::BindNotify(std::string notifyKey, IAnimNotify* Notifier)
+void Animator::BindNotify(const std::string& stateKey, const std::string& notifyKey, IAnimNotify* Notifier)
 {
-   m_impl->BindNotify(notifyKey, Notifier);
+    m_impl->BindNotify(stateKey, notifyKey, Notifier);
 }
 
 void Animator::Init()

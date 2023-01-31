@@ -27,7 +27,7 @@ public:
 	void Play(const std::string& animatorState);
 	void Notify();
 
-	void BindNotify(std::string notifyKey, IAnimNotify* Notifier);
+	void BindNotify(const std::string& stateKey, const std::string& notifyKey, IAnimNotify* Notifier);
 	
 public:
 	void Init() override;

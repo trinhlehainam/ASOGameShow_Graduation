@@ -92,7 +92,6 @@ void Player::Update(float deltaTime_s)
     if (m_input->IsJustPressed(INPUT_ID::BTN2))
         isJumpRequested = true;
 
-
     animator->SetFloat("speed", m_body->m_velocity.x);
 
     animator->SetBool("isAttack", m_input->IsPressed(INPUT_ID::BTN1));
